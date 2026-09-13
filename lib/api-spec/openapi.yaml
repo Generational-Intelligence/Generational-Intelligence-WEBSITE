@@ -3,13 +3,19 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Generational Intelligence public site and private studio API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: public
+    description: Public read-only website operations
+  - name: queries
+    description: Public query submissions
+  - name: studio
+    description: Authenticated private content management operations
 paths:
   /healthz:
     get:
@@ -24,7 +30,224 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /public/site:
+    get:
+      operationId: getPublicSite
+      tags: [public]
+      summary: Get the current published public site snapshot
+      responses:
+        "200":
+          description: Published public content
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicSite"
+  /queries:
+    post:
+      operationId: submitQuery
+      tags: [queries]
+      summary: Submit a public website query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QueryInput"
+      responses:
+        "201":
+          description: Query accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueryReceipt"
+        "400":
+          description: Invalid query
+  /studio/bootstrap:
+    get:
+      operationId: getStudioBootstrap
+      tags: [studio]
+      summary: Check and claim the private studio owner session
+      security:
+        - clerk: []
+      responses:
+        "200":
+          description: Studio bootstrap state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudioBootstrap"
+        "401":
+          description: Authentication required
+  /studio/summary:
+    get:
+      operationId: getStudioSummary
+      tags: [studio]
+      summary: Get private studio summary
+      security:
+        - clerk: []
+      responses:
+        "200":
+          description: Summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudioSummary"
+  /studio/projects:
+    get:
+      operationId: listStudioProjects
+      tags: [studio]
+      summary: List all private projects
+      security:
+        - clerk: []
+      responses:
+        "200":
+          description: Projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Project"
+    post:
+      operationId: createStudioProject
+      tags: [studio]
+      summary: Create a private project
+      security:
+        - clerk: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectInput"
+      responses:
+        "201":
+          description: Created project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+  /studio/projects/{projectId}:
+    patch:
+      operationId: updateStudioProject
+      tags: [studio]
+      summary: Update a private project
+      security:
+        - clerk: []
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectInput"
+      responses:
+        "200":
+          description: Updated project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+    delete:
+      operationId: deleteStudioProject
+      tags: [studio]
+      summary: Delete a private project
+      security:
+        - clerk: []
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      responses:
+        "204":
+          description: Deleted
+  /studio/projects/reorder:
+    post:
+      operationId: reorderStudioProjects
+      tags: [studio]
+      summary: Reorder projects
+      security:
+        - clerk: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [projectIds]
+              properties:
+                projectIds:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: Reordered projects
+  /studio/projects/{projectId}/publish:
+    post:
+      operationId: publishStudioProject
+      tags: [studio]
+      summary: Publish one approved project and create a rollback snapshot
+      security:
+        - clerk: []
+      parameters:
+        - $ref: "#/components/parameters/ProjectId"
+      responses:
+        "200":
+          description: Published project and snapshot
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublishResult"
+  /studio/snapshots:
+    get:
+      operationId: listStudioSnapshots
+      tags: [studio]
+      summary: List published snapshots
+      security:
+        - clerk: []
+      responses:
+        "200":
+          description: Snapshots
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Snapshot"
+  /studio/snapshots/{snapshotId}/rollback:
+    post:
+      operationId: rollbackStudioSnapshot
+      tags: [studio]
+      summary: Roll back the published site to a previous snapshot
+      security:
+        - clerk: []
+      parameters:
+        - $ref: "#/components/parameters/SnapshotId"
+      responses:
+        "200":
+          description: Rolled back snapshot
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublishResult"
 components:
+  securitySchemes:
+    clerk:
+      type: http
+      scheme: bearer
+  parameters:
+    ProjectId:
+      name: projectId
+      in: path
+      required: true
+      schema:
+        type: string
+    SnapshotId:
+      name: snapshotId
+      in: path
+      required: true
+      schema:
+        type: string
   schemas:
     HealthStatus:
       type: object
@@ -33,4 +256,110 @@ components:
           type: string
       required:
         - status
+    Project:
+      type: object
+      required: [id, name, slug, description, category, status, visibility, displayOrder, logoPath, imagePath, updatedAt]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        slug: { type: string }
+        description: { type: string }
+        category: { type: string }
+        status:
+          type: string
+          enum: [Draft, Ready for review, Published, Archived]
+        visibility:
+          type: string
+          enum: [private, public]
+        displayOrder: { type: integer }
+        logoPath: { type: [string, "null"] }
+        imagePath: { type: [string, "null"] }
+        privateNotes: { type: string }
+        privateFiles:
+          type: array
+          items: { type: string }
+        updatedAt: { type: string, format: date-time }
+    ProjectInput:
+      type: object
+      required: [name, slug, description, category, status, visibility, displayOrder]
+      properties:
+        name: { type: string }
+        slug: { type: string }
+        description: { type: string }
+        category: { type: string }
+        status:
+          type: string
+          enum: [Draft, Ready for review, Published, Archived]
+        visibility:
+          type: string
+          enum: [private, public]
+        displayOrder: { type: integer }
+        logoPath: { type: [string, "null"] }
+        imagePath: { type: [string, "null"] }
+        privateNotes: { type: string }
+        privateFiles:
+          type: array
+          items: { type: string }
+    PublicProject:
+      type: object
+      required: [name, slug, description, category, status, logoPath, imagePath]
+      properties:
+        name: { type: string }
+        slug: { type: string }
+        description: { type: string }
+        category: { type: string }
+        status: { type: string }
+        logoPath: { type: [string, "null"] }
+        imagePath: { type: [string, "null"] }
+    PublicSite:
+      type: object
+      required: [companyName, tagline, description, projects]
+      properties:
+        companyName: { type: string }
+        tagline: { type: string }
+        description: { type: string }
+        projects:
+          type: array
+          items: { $ref: "#/components/schemas/PublicProject" }
+    QueryInput:
+      type: object
+      required: [name, email, message]
+      properties:
+        name: { type: string, minLength: 2 }
+        email: { type: string, format: email }
+        company: { type: string }
+        message: { type: string, minLength: 10 }
+    QueryReceipt:
+      type: object
+      required: [accepted]
+      properties:
+        accepted: { type: boolean }
+    StudioBootstrap:
+      type: object
+      required: [isOwner, ownerClaimed]
+      properties:
+        isOwner: { type: boolean }
+        ownerClaimed: { type: boolean }
+    StudioSummary:
+      type: object
+      required: [total, drafts, review, published, archived]
+      properties:
+        total: { type: integer }
+        drafts: { type: integer }
+        review: { type: integer }
+        published: { type: integer }
+        archived: { type: integer }
+    Snapshot:
+      type: object
+      required: [id, createdAt, projectCount]
+      properties:
+        id: { type: string }
+        createdAt: { type: string, format: date-time }
+        projectCount: { type: integer }
+    PublishResult:
+      type: object
+      required: [publishedAt, snapshotId]
+      properties:
+        publishedAt: { type: string, format: date-time }
+        snapshotId: { type: string }
 
