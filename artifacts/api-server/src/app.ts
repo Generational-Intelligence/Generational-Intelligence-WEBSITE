@@ -8,6 +8,10 @@ import {
   CLERK_PROXY_PATH,
   clerkProxyMiddleware,
 } from "./middlewares/clerkProxyMiddleware";
+import {
+  STUDIO_API_PREFIX,
+  blockStudioInProduction,
+} from "./lib/studioAvailability";
 
 const app: Express = express();
 const isProduction = process.env.NODE_ENV === "production";
@@ -36,9 +40,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 if (isProduction) {
-  app.use("/api/studio", (_req, res) => {
-    res.status(404).json({ error: "Not found" });
-  });
+  // Keep this before Clerk and the API router. Published deployments must
+  // never authenticate, route, or expose any Studio endpoint.
+  app.use(STUDIO_API_PREFIX, blockStudioInProduction);
 } else {
   app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
   app.use(clerkMiddleware());

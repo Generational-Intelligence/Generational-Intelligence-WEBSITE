@@ -27,6 +27,12 @@ if (!basePath) {
   );
 }
 
+if (process.env.NODE_ENV === 'production') {
+  throw new Error(
+    'Generational Intelligence Studio is development-only and must not be built for a published deployment.',
+  );
+}
+
 export default defineConfig({
   base: basePath,
   plugins: [
