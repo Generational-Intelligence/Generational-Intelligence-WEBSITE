@@ -11,6 +11,8 @@ name = "web"
 paths = [ "/studio/" ]
 localPort = 24203
 
+# Intentionally development-only. Do not add services.production here:
+# the public deployment must never serve the Studio artifact.
 [services.development]
 run = "pnpm --filter @workspace/gi-studio run dev"
 
