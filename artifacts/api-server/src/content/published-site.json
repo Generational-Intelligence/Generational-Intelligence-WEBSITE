@@ -1,0 +1,43 @@
+{
+  "companyName": "Generational Intelligence",
+  "tagline": "Practical software for complex, real-world work.",
+  "description": "We turn operational knowledge into clear digital tools—designed around how people actually work, decide and collaborate.",
+  "projects": [
+    {
+      "name": "GatherWell",
+      "slug": "gatherwell",
+      "description": "Software that helps groups gather input, structure shared knowledge and move toward sound decisions.",
+      "category": "Collaboration software",
+      "status": "Deployed",
+      "logoPath": null,
+      "imagePath": null
+    },
+    {
+      "name": "OrderFlow",
+      "slug": "orderflow",
+      "description": "A focused operational system for turning incoming requests into visible, manageable work.",
+      "category": "Operations software",
+      "status": "Deployed",
+      "logoPath": null,
+      "imagePath": null
+    },
+    {
+      "name": "Route Planner",
+      "slug": "route-planner",
+      "description": "A planning tool being developed to make complex routing choices clearer and easier to revise.",
+      "category": "Planning software",
+      "status": "In development",
+      "logoPath": null,
+      "imagePath": null
+    },
+    {
+      "name": "MORB",
+      "slug": "morb",
+      "description": "A developing software project for organising specialist operational information into a useful working view.",
+      "category": "Operational intelligence",
+      "status": "In development",
+      "logoPath": null,
+      "imagePath": null
+    }
+  ]
+}

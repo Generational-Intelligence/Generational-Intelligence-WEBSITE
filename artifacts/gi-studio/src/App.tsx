@@ -60,6 +60,10 @@ function RoutedErrorBoundary({ children }: { children: ReactNode }) {
 function App() {
   const [location, setLocation] = useLocation();
 
+  if (import.meta.env.PROD) {
+    return <NotFound />;
+  }
+
   if (!clerkPubKey) {
     return (
       <div className="flex min-h-screen items-center justify-center p-4 text-center">

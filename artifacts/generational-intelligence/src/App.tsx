@@ -31,6 +31,16 @@ function RoutedErrorBoundary({ children }: { children: ReactNode }) {
 }
 
 function App() {
+  if (
+    import.meta.env.PROD &&
+    window.location.hostname.toLowerCase() === 'generational-intelligence.com'
+  ) {
+    window.location.replace(
+      `https://www.generational-intelligence.com${window.location.pathname}${window.location.search}${window.location.hash}`,
+    );
+    return null;
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>

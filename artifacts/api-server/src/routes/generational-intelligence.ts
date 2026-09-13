@@ -2,6 +2,9 @@ import { Router, type IRouter, type NextFunction, type Request, type Response } 
 import { getAuth } from "@clerk/express";
 import { ReplitConnectors } from "@replit/connectors-sdk";
 import { and, asc, count, desc, eq } from "drizzle-orm";
+import { mkdir, rename, rm, writeFile } from "node:fs/promises";
+import { extname } from "node:path";
+import { fileURLToPath } from "node:url";
 import {
   CreateStudioProjectBody,
   CreateStudioProjectResponse,
@@ -32,9 +35,17 @@ import {
   studioOwners,
 } from "@workspace/db";
 import { ObjectStorageService } from "../lib/objectStorage";
+import approvedPublicSnapshot from "../content/published-site.json";
 
 const router: IRouter = Router();
 const storage = new ObjectStorageService();
+const isProduction = process.env.NODE_ENV === "production";
+const approvedAssetsDir = fileURLToPath(
+  new URL("../../generational-intelligence/public/published-assets/", import.meta.url),
+);
+const approvedSnapshotPath = fileURLToPath(
+  new URL("../src/content/published-site.json", import.meta.url),
+);
 
 type OwnerRequest = Request & { ownerUserId?: string };
 
@@ -87,12 +98,63 @@ async function buildPublicSite() {
 
 async function createSnapshot() {
   const payload = await buildPublicSite();
-  const [snapshot] = await db
-    .insert(publishedSnapshots)
-    .values({ payload })
-    .returning();
-  if (!snapshot) throw new Error("Snapshot creation failed");
-  return snapshot;
+  return db.transaction(async (tx) => {
+    const [snapshot] = await tx
+      .insert(publishedSnapshots)
+      .values({ payload })
+      .returning();
+    if (!snapshot) throw new Error("Snapshot creation failed");
+    await exportApprovedSnapshot(payload);
+    return snapshot;
+  });
+}
+
+function extensionFor(contentType: string | null, objectPath: string) {
+  const existing = extname(objectPath);
+  if (existing && existing.length <= 8) return existing;
+  const extensions: Record<string, string> = {
+    "image/png": ".png",
+    "image/jpeg": ".jpg",
+    "image/webp": ".webp",
+    "image/svg+xml": ".svg",
+    "image/gif": ".gif",
+  };
+  return extensions[contentType ?? ""] ?? "";
+}
+
+async function exportApprovedSnapshot(
+  payload: Awaited<ReturnType<typeof buildPublicSite>>,
+) {
+  const nextAssetsDir = `${approvedAssetsDir}.next`;
+  await rm(nextAssetsDir, { recursive: true, force: true });
+  await mkdir(nextAssetsDir, { recursive: true });
+
+  const exportedProjects = [];
+  for (const project of payload.projects) {
+    const exportedProject = { ...project };
+    for (const field of ["logoPath", "imagePath"] as const) {
+      const objectPath = project[field];
+      if (!objectPath?.startsWith("/objects/")) continue;
+
+      const objectFile = await storage.getObjectEntityFile(objectPath);
+      const response = await storage.downloadObject(objectFile, 0);
+      const extension = extensionFor(response.headers.get("content-type"), objectPath);
+      const fileName = `${project.slug}-${field === "logoPath" ? "logo" : "image"}${extension}`;
+      await writeFile(
+        `${nextAssetsDir}/${fileName}`,
+        Buffer.from(await response.arrayBuffer()),
+      );
+      exportedProject[field] = `/published-assets/${fileName}`;
+    }
+    exportedProjects.push(exportedProject);
+  }
+
+  const exportedPayload = { ...payload, projects: exportedProjects };
+  const nextSnapshotPath = `${approvedSnapshotPath}.next`;
+  await writeFile(nextSnapshotPath, `${JSON.stringify(exportedPayload, null, 2)}\n`);
+  await rm(approvedAssetsDir, { recursive: true, force: true });
+  await rename(nextAssetsDir, approvedAssetsDir);
+  await rename(nextSnapshotPath, approvedSnapshotPath);
 }
 
 async function requireOwner(req: OwnerRequest, res: Response, next: NextFunction) {
@@ -113,12 +175,19 @@ async function requireOwner(req: OwnerRequest, res: Response, next: NextFunction
 
 router.get("/public/site", async (req, res) => {
   try {
+    if (isProduction) {
+      res.json(GetPublicSiteResponse.parse(approvedPublicSnapshot));
+      return;
+    }
     const [snapshot] = await db
       .select()
       .from(publishedSnapshots)
       .orderBy(desc(publishedSnapshots.createdAt));
-    const payload = snapshot?.payload ?? (await buildPublicSite());
-    res.json(GetPublicSiteResponse.parse(payload));
+    if (!snapshot) {
+      res.status(503).json({ error: "No approved public snapshot exists" });
+      return;
+    }
+    res.json(GetPublicSiteResponse.parse(snapshot.payload));
   } catch (error) {
     req.log.error({ err: error }, "Unable to load public site");
     res.status(500).json({ error: "Unable to load public site" });
@@ -126,6 +195,10 @@ router.get("/public/site", async (req, res) => {
 });
 
 router.get("/objects/*path", async (req, res) => {
+  if (isProduction) {
+    res.status(404).json({ error: "File not found" });
+    return;
+  }
   try {
     const requestedPath = `/objects/${
       Array.isArray(req.params.path) ? req.params.path.join("/") : req.params.path

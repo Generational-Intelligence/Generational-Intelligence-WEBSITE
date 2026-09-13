@@ -10,6 +10,7 @@ import {
 } from "./middlewares/clerkProxyMiddleware";
 
 const app: Express = express();
+const isProduction = process.env.NODE_ENV === "production";
 
 app.use(
   pinoHttp({
@@ -30,11 +31,18 @@ app.use(
     },
   }),
 );
-app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
 app.use(cors({ credentials: true, origin: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(clerkMiddleware());
+
+if (isProduction) {
+  app.use("/api/studio", (_req, res) => {
+    res.status(404).json({ error: "Not found" });
+  });
+} else {
+  app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
+  app.use(clerkMiddleware());
+}
 
 app.use("/api", router);
 
