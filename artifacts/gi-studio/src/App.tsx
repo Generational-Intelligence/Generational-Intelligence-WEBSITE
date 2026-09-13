@@ -4,6 +4,7 @@ import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { ClerkProvider } from '@clerk/react';
+import { publishableKeyFromHost } from '@clerk/react/internal';
 import NotFound from '@/pages/not-found';
 import Intro from '@/pages/intro';
 import SignInPage from '@/pages/sign-in';
@@ -21,7 +22,18 @@ import {
 import { ProtectedRoute } from '@/components/auth/protected-route';
 
 const queryClient = new QueryClient();
-const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const clerkPubKey = publishableKeyFromHost(
+  window.location.hostname,
+  import.meta.env.VITE_CLERK_PUBLISHABLE_KEY,
+);
+const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
+
+function stripBase(path: string) {
+  return basePath && (path === basePath || path.startsWith(`${basePath}/`))
+    ? path.slice(basePath.length) || '/'
+    : path;
+}
 
 function Router() {
   return (
@@ -57,9 +69,28 @@ function RoutedErrorBoundary({ children }: { children: ReactNode }) {
   return <ErrorBoundary resetKey={location}>{children}</ErrorBoundary>;
 }
 
-function App() {
-  const [location, setLocation] = useLocation();
+function ClerkApp() {
+  const [, setLocation] = useLocation();
+  return (
+    <ClerkProvider 
+      publishableKey={clerkPubKey}
+      proxyUrl={clerkProxyUrl}
+      signInUrl={`${basePath}/sign-in`}
+      signUpUrl={`${basePath}/sign-up`}
+      routerPush={(to) => setLocation(stripBase(to))}
+      routerReplace={(to) => setLocation(stripBase(to), { replace: true })}
+    >
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Router />
+          <Toaster />
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ClerkProvider>
+  );
+}
 
+function App() {
   if (import.meta.env.PROD) {
     return <NotFound />;
   }
@@ -73,20 +104,9 @@ function App() {
   }
 
   return (
-    <ClerkProvider 
-      publishableKey={clerkPubKey}
-      routerPush={(to) => setLocation(to)}
-      routerReplace={(to) => setLocation(to, { replace: true })}
-    >
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
-            <Router />
-          </WouterRouter>
-          <Toaster />
-        </TooltipProvider>
-      </QueryClientProvider>
-    </ClerkProvider>
+    <WouterRouter base={basePath}>
+      <ClerkApp />
+    </WouterRouter>
   );
 }
 

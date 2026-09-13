@@ -3,6 +3,8 @@ import logoLight from '@assets/2_1789327486256.png';
 import logoDark from '@assets/1_1789327486254.png';
 
 export default function SignUpPage() {
+  const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+
   return (
     <div className="flex min-h-[100dvh] bg-background">
       <div className="flex w-full flex-col items-center justify-center p-6 sm:p-12">
@@ -12,9 +14,9 @@ export default function SignUpPage() {
         </div>
         <SignUp 
           routing="path" 
-          path="/sign-up"
-          signInUrl="/sign-in"
-          forceRedirectUrl="/workspace"
+          path={`${basePath}/sign-up`}
+          signInUrl={`${basePath}/sign-in`}
+          forceRedirectUrl={`${basePath}/workspace`}
           appearance={{
             elements: {
               cardBox: "shadow-none border border-border bg-card rounded-lg",

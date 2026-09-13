@@ -3,6 +3,8 @@ import logoLight from '@assets/2_1789327486256.png'; // black logo for light sur
 import logoDark from '@assets/1_1789327486254.png'; // white logo for dark surfaces
 
 export default function SignInPage() {
+  const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+
   return (
     <div className="flex min-h-[100dvh] bg-background">
       <div className="flex w-full flex-col items-center justify-center p-6 sm:p-12">
@@ -12,9 +14,9 @@ export default function SignInPage() {
         </div>
         <SignIn 
           routing="path" 
-          path="/sign-in"
-          signUpUrl="/sign-up"
-          forceRedirectUrl="/workspace"
+          path={`${basePath}/sign-in`}
+          signUpUrl={`${basePath}/sign-up`}
+          forceRedirectUrl={`${basePath}/workspace`}
           appearance={{
             elements: {
               cardBox: "shadow-none border border-border bg-card rounded-lg",
