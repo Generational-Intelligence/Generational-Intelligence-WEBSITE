@@ -172,16 +172,30 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required: [projectIds]
-              properties:
-                projectIds:
-                  type: array
-                  items:
-                    type: string
+              $ref: "#/components/schemas/ReorderProjectsInput"
       responses:
         "200":
           description: Reordered projects
+  /studio/uploads/request-url:
+    post:
+      operationId: requestStudioUpload
+      tags: [studio]
+      summary: Request a secure direct upload URL
+      security:
+        - clerk: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UploadRequest"
+      responses:
+        "200":
+          description: Secure upload URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadResponse"
   /studio/projects/{projectId}/publish:
     post:
       operationId: publishStudioProject
@@ -258,13 +272,14 @@ components:
         - status
     Project:
       type: object
-      required: [id, name, slug, description, category, status, visibility, displayOrder, logoPath, imagePath, updatedAt]
+      required: [id, name, slug, description, category, publicStatus, status, visibility, displayOrder, logoPath, imagePath, updatedAt]
       properties:
         id: { type: string }
         name: { type: string }
         slug: { type: string }
         description: { type: string }
         category: { type: string }
+        publicStatus: { type: string }
         status:
           type: string
           enum: [Draft, Ready for review, Published, Archived]
@@ -281,12 +296,13 @@ components:
         updatedAt: { type: string, format: date-time }
     ProjectInput:
       type: object
-      required: [name, slug, description, category, status, visibility, displayOrder]
+      required: [name, slug, description, category, publicStatus, status, visibility, displayOrder]
       properties:
         name: { type: string }
         slug: { type: string }
         description: { type: string }
         category: { type: string }
+        publicStatus: { type: string }
         status:
           type: string
           enum: [Draft, Ready for review, Published, Archived]
@@ -300,6 +316,26 @@ components:
         privateFiles:
           type: array
           items: { type: string }
+    ReorderProjectsInput:
+      type: object
+      required: [projectIds]
+      properties:
+        projectIds:
+          type: array
+          items: { type: string }
+    UploadRequest:
+      type: object
+      required: [name, size, contentType]
+      properties:
+        name: { type: string }
+        size: { type: integer }
+        contentType: { type: string }
+    UploadResponse:
+      type: object
+      required: [uploadURL, objectPath]
+      properties:
+        uploadURL: { type: string }
+        objectPath: { type: string }
     PublicProject:
       type: object
       required: [name, slug, description, category, status, logoPath, imagePath]

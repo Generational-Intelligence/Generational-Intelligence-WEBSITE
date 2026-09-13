@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Generational Intelligence"
+description = "The restrained public website for Generational Intelligence, presenting approved published software and accepting private query submissions without exposing any administration surface."
+version = "1.0.0"
+id = "artifacts/generational-intelligence"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22765
+
+[services.development]
+run = "pnpm --filter @workspace/generational-intelligence run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/generational-intelligence", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/generational-intelligence/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22765"
+BASE_PATH = "/"

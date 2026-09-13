@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/studio/"
+title = "Generational Intelligence Studio"
+description = "A private owner-only content studio for managing Generational Intelligence projects, approved public assets, internal files and notes, editorial status, ordering, publication, previews, and snapshot rollback."
+version = "1.0.0"
+id = "artifacts/gi-studio"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/studio/" ]
+localPort = 24203
+
+[services.development]
+run = "pnpm --filter @workspace/gi-studio run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/gi-studio", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/gi-studio/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24203"
+BASE_PATH = "/studio/"
