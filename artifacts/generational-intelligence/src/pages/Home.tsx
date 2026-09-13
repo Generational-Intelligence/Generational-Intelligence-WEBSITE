@@ -88,7 +88,12 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background flex flex-col font-sans">
       <header className="px-6 py-12 md:px-16 flex justify-between items-start">
-        <img src={LogoWhite} alt={site.companyName} className="h-6 md:h-8 object-contain" />
+        <div className="flex items-center gap-4 md:gap-6">
+          <img src={LogoWhite} alt={site.companyName} className="h-10 md:h-16 w-auto object-contain" />
+          <span className="hidden md:block font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
+            Generational Intelligence
+          </span>
+        </div>
         <div className="font-mono text-[10px] md:text-xs text-muted-foreground uppercase tracking-widest text-right">
           <div>Studio</div>
           <div>[ Operational ]</div>
