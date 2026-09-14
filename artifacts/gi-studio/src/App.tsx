@@ -10,6 +10,7 @@ import WorkspaceProject from '@/pages/workspace/project';
 import WorkspaceSnapshots from '@/pages/workspace/snapshots';
 import {
   Route,
+  Redirect,
   Switch,
   Router as WouterRouter,
   useLocation,
@@ -26,7 +27,9 @@ function Router() {
         <Route path="/workspace" component={WorkspaceList} />
         <Route path="/workspace/snapshots" component={WorkspaceSnapshots} />
         <Route path="/workspace/projects/:id" component={WorkspaceProject} />
-        <Route component={NotFound} />
+        <Route>
+          <Redirect to="/workspace" replace />
+        </Route>
       </Switch>
     </RoutedErrorBoundary>
   );
