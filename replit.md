@@ -40,12 +40,13 @@ A public software portfolio backed by an explicitly approved snapshot, with a se
 ## Product
 
 - Public company and project presentation with a query form
-- Owner-only development Studio for project CRUD, editorial review, approved uploads, ordering, preview, publishing, snapshots, and rollback
+- Development-only Studio with direct sandbox access for project CRUD, editorial review, approved uploads, ordering, preview, publishing, snapshots, and rollback
 
 ## User preferences
 
 - Do not publish or connect custom domains without explicit user instruction.
 - Keep the Replit development sandbox separate from the public deployment.
+- The development Studio does not require sign-in; its privacy boundary is the private Replit sandbox. Production must continue blocking all Studio UI and API access.
 
 ## Gotchas
 

@@ -1,4 +1,3 @@
-import { UserButton } from '@clerk/react';
 import { Link, useLocation } from 'wouter';
 import { Globe, FileText, Activity } from 'lucide-react';
 import markWhite from '@assets/1_1789327474600.png';
@@ -23,11 +22,6 @@ export function WorkspaceLayout({ children }: { children: React.ReactNode }) {
           <a href="/" target="_blank" rel="noreferrer" className="flex h-10 w-10 items-center justify-center text-muted-foreground hover:text-foreground transition-colors" title="Live Preview">
             <Globe className="h-5 w-5" />
           </a>
-          <UserButton 
-            appearance={{
-              elements: { userButtonAvatarBox: "h-8 w-8 rounded-full border border-border" }
-            }} 
-          />
         </div>
       </aside>
 

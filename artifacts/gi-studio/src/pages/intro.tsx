@@ -1,12 +1,9 @@
-import { useUser } from '@clerk/react';
 import { Link } from 'wouter';
 import { ArrowRight, Lock } from 'lucide-react';
 import logoLight from '@assets/2_1789327486256.png'; // black logo for light surfaces
 import logoDark from '@assets/1_1789327486254.png'; // white logo for dark surfaces
 
 export default function Intro() {
-  const { isLoaded, isSignedIn } = useUser();
-
   return (
     <div className="flex min-h-[100dvh] flex-col bg-background selection:bg-primary selection:text-primary-foreground">
       <main className="flex flex-1 flex-col items-center justify-center p-6 md:p-12">
@@ -31,20 +28,10 @@ export default function Intro() {
             </p>
 
             <div className="pt-8">
-              {isLoaded ? (
-                isSignedIn ? (
-                  <Link href="/workspace" className="inline-flex h-11 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground hover-elevate transition-all">
-                    Enter Workspace
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                ) : (
-                  <Link href="/sign-in" className="inline-flex h-11 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground hover-elevate transition-all">
-                    Owner Sign In
-                  </Link>
-                )
-              ) : (
-                <div className="h-11 w-40 animate-pulse rounded-md bg-muted mx-auto" />
-              )}
+              <Link href="/workspace" className="inline-flex h-11 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground hover-elevate transition-all">
+                Enter Workspace
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
             </div>
           </div>
         </div>

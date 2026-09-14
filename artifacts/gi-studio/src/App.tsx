@@ -5,20 +5,15 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import Intro from '@/pages/intro';
-import SignInPage from '@/pages/sign-in';
-import SignUpPage from '@/pages/sign-up';
 import WorkspaceList from '@/pages/workspace/index';
 import WorkspaceProject from '@/pages/workspace/project';
 import WorkspaceSnapshots from '@/pages/workspace/snapshots';
-import UnauthorizedPage from '@/pages/unauthorized';
 import {
   Route,
   Switch,
   Router as WouterRouter,
   useLocation,
 } from 'wouter';
-import { ProtectedRoute } from '@/components/auth/protected-route';
-import { StudioAuthProvider } from '@/components/auth/studio-auth-provider';
 
 const queryClient = new QueryClient();
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -28,24 +23,9 @@ function Router() {
     <RoutedErrorBoundary>
       <Switch>
         <Route path="/" component={Intro} />
-        <Route path="/sign-in/*?" component={SignInPage} />
-        <Route path="/sign-up/*?" component={SignUpPage} />
-        <Route path="/unauthorized" component={UnauthorizedPage} />
-        <Route path="/workspace">
-          <ProtectedRoute>
-            <WorkspaceList />
-          </ProtectedRoute>
-        </Route>
-        <Route path="/workspace/snapshots">
-          <ProtectedRoute>
-            <WorkspaceSnapshots />
-          </ProtectedRoute>
-        </Route>
-        <Route path="/workspace/projects/:id">
-          <ProtectedRoute>
-            <WorkspaceProject />
-          </ProtectedRoute>
-        </Route>
+        <Route path="/workspace" component={WorkspaceList} />
+        <Route path="/workspace/snapshots" component={WorkspaceSnapshots} />
+        <Route path="/workspace/projects/:id" component={WorkspaceProject} />
         <Route component={NotFound} />
       </Switch>
     </RoutedErrorBoundary>
@@ -57,19 +37,6 @@ function RoutedErrorBoundary({ children }: { children: ReactNode }) {
   return <ErrorBoundary resetKey={location}>{children}</ErrorBoundary>;
 }
 
-function ClerkApp() {
-  return (
-    <StudioAuthProvider>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <Router />
-          <Toaster />
-        </TooltipProvider>
-      </QueryClientProvider>
-    </StudioAuthProvider>
-  );
-}
-
 function App() {
   if (import.meta.env.PROD) {
     return <NotFound />;
@@ -77,7 +44,12 @@ function App() {
 
   return (
     <WouterRouter base={basePath}>
-      <ClerkApp />
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Router />
+          <Toaster />
+        </TooltipProvider>
+      </QueryClientProvider>
     </WouterRouter>
   );
 }

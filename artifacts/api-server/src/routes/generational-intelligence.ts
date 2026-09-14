@@ -1,5 +1,4 @@
-import { Router, type IRouter, type NextFunction, type Request, type Response } from "express";
-import { getAuth } from "@clerk/express";
+import { Router, type IRouter } from "express";
 import { ReplitConnectors } from "@replit/connectors-sdk";
 import { and, asc, count, desc, eq } from "drizzle-orm";
 import { mkdir, rename, rm, writeFile } from "node:fs/promises";
@@ -32,7 +31,6 @@ import {
   projects,
   publishedSnapshots,
   querySubmissions,
-  studioOwners,
 } from "@workspace/db";
 import { ObjectStorageService } from "../lib/objectStorage";
 import approvedPublicSnapshot from "../content/published-site.json";
@@ -46,8 +44,6 @@ const approvedAssetsDir = fileURLToPath(
 const approvedSnapshotPath = fileURLToPath(
   new URL("../src/content/published-site.json", import.meta.url),
 );
-
-type OwnerRequest = Request & { ownerUserId?: string };
 
 const companyCopy = {
   companyName: "Generational Intelligence",
@@ -155,22 +151,6 @@ async function exportApprovedSnapshot(
   await rm(approvedAssetsDir, { recursive: true, force: true });
   await rename(nextAssetsDir, approvedAssetsDir);
   await rename(nextSnapshotPath, approvedSnapshotPath);
-}
-
-async function requireOwner(req: OwnerRequest, res: Response, next: NextFunction) {
-  const auth = getAuth(req);
-  const userId = auth.userId;
-  if (!userId) {
-    res.status(401).json({ error: "Authentication required" });
-    return;
-  }
-  const owners = await db.select().from(studioOwners).limit(1);
-  if (!owners[0] || owners[0].clerkUserId !== userId) {
-    res.status(403).json({ error: "Owner access required" });
-    return;
-  }
-  req.ownerUserId = userId;
-  next();
 }
 
 router.get("/public/site", async (req, res) => {
@@ -294,35 +274,13 @@ router.post("/queries", async (req, res) => {
 });
 
 router.get("/studio/bootstrap", async (req, res) => {
-  const userId = getAuth(req).userId;
-  if (!userId) {
-    res.status(401).json({ error: "Authentication required" });
-    return;
-  }
-
-  const owners = await db.select().from(studioOwners).limit(1);
-  if (!owners[0]) {
-    const [claimed] = await db
-      .insert(studioOwners)
-      .values({ clerkUserId: userId })
-      .onConflictDoNothing()
-      .returning();
-    if (claimed) {
-      res.json(GetStudioBootstrapResponse.parse({ isOwner: true, ownerClaimed: true }));
-      return;
-    }
-  }
-
-  const [owner] = await db.select().from(studioOwners).limit(1);
   res.json(
     GetStudioBootstrapResponse.parse({
-      isOwner: owner?.clerkUserId === userId,
+      isOwner: true,
       ownerClaimed: false,
     }),
   );
 });
-
-router.use("/studio", requireOwner);
 
 router.get("/studio/summary", async (_req, res) => {
   const rows = await db
@@ -401,9 +359,9 @@ router.post("/studio/projects/reorder", async (req, res) => {
   res.json({ reordered: true });
 });
 
-router.post("/studio/uploads/request-url", async (req: OwnerRequest, res) => {
+router.post("/studio/uploads/request-url", async (req, res) => {
   const parsed = RequestStudioUploadBody.safeParse(req.body);
-  if (!parsed.success || !req.ownerUserId) {
+  if (!parsed.success) {
     res.status(400).json({ error: "Invalid upload request" });
     return;
   }
@@ -417,7 +375,7 @@ router.post("/studio/uploads/request-url", async (req: OwnerRequest, res) => {
   }
 });
 
-router.get("/studio/files/*path", async (req: OwnerRequest, res) => {
+router.get("/studio/files/*path", async (req, res) => {
   try {
     const path = Array.isArray(req.params.path)
       ? req.params.path.join("/")
