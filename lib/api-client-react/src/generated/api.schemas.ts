@@ -130,6 +130,13 @@ export interface QueryInput {
      * @maxLength 5000
      */
   message: string;
+  /** Generated once per form fill so retries never create duplicate enquiries. */
+  idempotencyKey?: string;
+  /**
+     * Anti-spam field. Real visitors never see or fill it.
+     * @maxLength 200
+     */
+  website?: string;
 }
 
 export interface QueryReceipt {

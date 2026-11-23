@@ -28,11 +28,20 @@ import {
   db,
   projects,
   publishedSnapshots,
-  querySubmissions,
 } from "@workspace/db";
 import { ObjectStorageService } from "../lib/objectStorage";
-import { buildEnquiryEmail, parseEnquiry } from "../lib/enquiry";
-import { mailer } from "../lib/mailer";
+import { parseEnquiry } from "../lib/enquiry";
+import {
+  deliverEnquiry,
+  retryPendingDeliveries,
+  storeEnquiry,
+} from "../lib/enquiryDelivery";
+import {
+  checkEnquiryRateLimit,
+  clientAddressFrom,
+  hashClientKey,
+  recordEnquiryAttempt,
+} from "../lib/rateLimit";
 import approvedPublicSnapshot from "../content/published-site.json";
 
 const router: IRouter = Router();
@@ -216,12 +225,6 @@ router.get("/objects/*path", async (req, res) => {
 });
 
 router.post("/queries", async (req, res) => {
-  const parsed = parseEnquiry(req.body);
-  if (!parsed.ok) {
-    res.status(400).json({ error: "Please check the form and try again" });
-    return;
-  }
-
   const destination = process.env.QUERY_DESTINATION_EMAIL;
   if (!destination) {
     req.log.error("QUERY_DESTINATION_EMAIL is not configured");
@@ -229,16 +232,60 @@ router.post("/queries", async (req, res) => {
     return;
   }
 
+  let clientKey: string;
   try {
-    const submission = parsed.value;
-    await db.insert(querySubmissions).values(submission);
-    await mailer.send(buildEnquiryEmail(destination, submission));
-
-    res.status(201).json(SubmitQueryResponse.parse({ accepted: true }));
+    clientKey = hashClientKey(clientAddressFrom(req.headers, req.socket.remoteAddress));
+    const decision = await checkEnquiryRateLimit(clientKey);
+    if (!decision.allowed) {
+      req.log.warn({ reason: decision.reason }, "Enquiry rate limit reached");
+      res.setHeader("Retry-After", String(decision.retryAfterSeconds));
+      res.status(429).json({ error: "Too many submissions. Please try again later." });
+      return;
+    }
   } catch (error) {
-    req.log.error({ err: error }, "Unable to deliver public query");
-    res.status(502).json({ error: "Unable to send your query right now" });
+    req.log.error({ err: error }, "Enquiry rate limit check failed");
+    res.status(503).json({ error: "Query delivery is temporarily unavailable" });
+    return;
   }
+
+  const parsed = parseEnquiry(req.body);
+  if (!parsed.ok) {
+    res.status(400).json({ error: "Please check the form and try again" });
+    return;
+  }
+
+  let stored: Awaited<ReturnType<typeof storeEnquiry>>;
+  try {
+    await recordEnquiryAttempt(clientKey);
+    if (parsed.honeypotTriggered) {
+      // Look successful to the bot; store and send nothing.
+      req.log.info("Enquiry discarded by anti-spam field");
+      res.status(201).json(SubmitQueryResponse.parse({ accepted: true }));
+      return;
+    }
+    stored = await storeEnquiry(parsed.value, parsed.idempotencyKey);
+  } catch (error) {
+    req.log.error({ err: error }, "Unable to store public query");
+    res.status(503).json({ error: "Unable to accept your query right now" });
+    return;
+  }
+
+  // The enquiry is now safely stored, so the visitor is told it was received
+  // even if the notification email fails; failed notifications are retried.
+  try {
+    const outcome = stored.deliveryStatus === "sent"
+      ? "sent"
+      : await deliverEnquiry(stored.id, destination);
+    req.log.info(
+      { enquiryId: stored.id, duplicate: !stored.created, delivery: outcome ?? "in_progress" },
+      "Enquiry received",
+    );
+    await retryPendingDeliveries(destination);
+  } catch (error) {
+    req.log.error({ err: error, enquiryId: stored.id }, "Enquiry notification step failed");
+  }
+
+  res.status(201).json(SubmitQueryResponse.parse({ accepted: true }));
 });
 
 router.get("/studio/bootstrap", async (req, res) => {

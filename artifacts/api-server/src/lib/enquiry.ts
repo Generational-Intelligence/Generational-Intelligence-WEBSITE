@@ -33,7 +33,14 @@ export interface Enquiry {
 }
 
 export type EnquiryParseResult =
-  | { ok: true; value: Enquiry }
+  | {
+      ok: true;
+      value: Enquiry;
+      /** Client-generated key so a retried submission is never stored twice. */
+      idempotencyKey: string | null;
+      /** True when the hidden anti-spam field was filled in (almost always a bot). */
+      honeypotTriggered: boolean;
+    }
   | { ok: false };
 
 function trimIfString(value: unknown): unknown {
@@ -65,6 +72,11 @@ export function parseEnquiry(body: unknown): EnquiryParseResult {
     email: trimIfString(input["email"]),
     company: company === "" || company === null ? undefined : company,
     message,
+    idempotencyKey:
+      input["idempotencyKey"] === "" || input["idempotencyKey"] === null
+        ? undefined
+        : input["idempotencyKey"],
+    website: typeof input["website"] === "string" ? input["website"] : undefined,
   });
   if (!parsed.success) return { ok: false };
 
@@ -82,7 +94,12 @@ export function parseEnquiry(body: unknown): EnquiryParseResult {
   }
   if (MESSAGE_FORBIDDEN.test(value.message)) return { ok: false };
 
-  return { ok: true, value };
+  return {
+    ok: true,
+    value,
+    idempotencyKey: parsed.data.idempotencyKey?.toLowerCase() ?? null,
+    honeypotTriggered: (parsed.data.website ?? "").trim() !== "",
+  };
 }
 
 function assertHeaderSafe(value: string): string {

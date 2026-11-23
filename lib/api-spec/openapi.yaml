@@ -62,6 +62,10 @@ paths:
                 $ref: "#/components/schemas/QueryReceipt"
         "400":
           description: Invalid query
+        "429":
+          description: Too many submissions from this client
+        "503":
+          description: Temporarily unable to accept queries
   /studio/bootstrap:
     get:
       operationId: getStudioBootstrap
@@ -365,6 +369,14 @@ components:
         email: { type: string, format: email, maxLength: 254 }
         company: { type: string, maxLength: 160 }
         message: { type: string, minLength: 10, maxLength: 5000 }
+        idempotencyKey:
+          type: string
+          format: uuid
+          description: Generated once per form fill so retries never create duplicate enquiries.
+        website:
+          type: string
+          maxLength: 200
+          description: Anti-spam field. Real visitors never see or fill it.
     QueryReceipt:
       type: object
       required: [accepted]

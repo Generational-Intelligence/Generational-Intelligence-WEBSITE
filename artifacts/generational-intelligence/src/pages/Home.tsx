@@ -1,4 +1,5 @@
 import { useGetPublicSite, useSubmitQuery } from '@workspace/api-client-react';
+import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -42,6 +43,10 @@ export default function Home() {
   const { toast } = useToast();
   
   const submitQuery = useSubmitQuery();
+  // One key per form fill: a retried submission is never stored twice.
+  const idempotencyKey = useRef<string>(newSubmissionKey());
+  // Hidden anti-spam field. People never see it; simple bots fill it in.
+  const honeypotRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -55,9 +60,17 @@ export default function Home() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     submitQuery.mutate(
-      { data: values },
+      {
+        data: {
+          ...values,
+          company: values.company || undefined,
+          idempotencyKey: idempotencyKey.current,
+          website: honeypotRef.current?.value || undefined,
+        },
+      },
       {
         onSuccess: () => {
+          idempotencyKey.current = newSubmissionKey();
           toast({
             title: 'Query Received',
             description: 'Your message has been securely routed to our team.',
@@ -180,6 +193,21 @@ export default function Home() {
           <div className="lg:col-span-6 lg:col-start-5">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
+                <div
+                  aria-hidden="true"
+                  style={{ position: 'absolute', left: '-10000px', top: 'auto', width: '1px', height: '1px', overflow: 'hidden' }}
+                >
+                  <label htmlFor="gi-website-field">Leave this field empty</label>
+                  <input
+                    id="gi-website-field"
+                    ref={honeypotRef}
+                    type="text"
+                    name="website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    defaultValue=""
+                  />
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <FormField
                     control={form.control}
@@ -272,6 +300,17 @@ export default function Home() {
       </footer>
     </div>
   );
+}
+
+function newSubmissionKey(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  // Fallback for older browsers: RFC 4122 version 4 format.
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+  });
 }
 
 function ProjectCard({ project, muted = false }: { project: any, muted?: boolean }) {

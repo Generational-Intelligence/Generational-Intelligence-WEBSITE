@@ -49,13 +49,17 @@ export const submitQueryBodyCompanyMax = 160;
 export const submitQueryBodyMessageMin = 10;
 export const submitQueryBodyMessageMax = 5000;
 
+export const submitQueryBodyWebsiteMax = 200;
+
 
 
 export const SubmitQueryBody = zod.object({
   "name": zod.string().min(submitQueryBodyNameMin).max(submitQueryBodyNameMax),
   "email": zod.string().email().max(submitQueryBodyEmailMax),
   "company": zod.string().max(submitQueryBodyCompanyMax).optional(),
-  "message": zod.string().min(submitQueryBodyMessageMin).max(submitQueryBodyMessageMax)
+  "message": zod.string().min(submitQueryBodyMessageMin).max(submitQueryBodyMessageMax),
+  "idempotencyKey": zod.string().uuid().optional().describe('Generated once per form fill so retries never create duplicate enquiries.'),
+  "website": zod.string().max(submitQueryBodyWebsiteMax).optional().describe('Anti-spam field. Real visitors never see or fill it.')
 })
 
 export const SubmitQueryResponse = zod.object({
