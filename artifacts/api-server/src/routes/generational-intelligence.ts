@@ -1,5 +1,4 @@
 import { Router, type IRouter } from "express";
-import { ReplitConnectors } from "@replit/connectors-sdk";
 import { and, asc, count, desc, eq } from "drizzle-orm";
 import { mkdir, rename, rm, writeFile } from "node:fs/promises";
 import { extname } from "node:path";
@@ -20,7 +19,6 @@ import {
   RequestStudioUploadResponse,
   RollbackStudioSnapshotParams,
   RollbackStudioSnapshotResponse,
-  SubmitQueryBody,
   SubmitQueryResponse,
   UpdateStudioProjectBody,
   UpdateStudioProjectParams,
@@ -33,6 +31,8 @@ import {
   querySubmissions,
 } from "@workspace/db";
 import { ObjectStorageService } from "../lib/objectStorage";
+import { buildEnquiryEmail, parseEnquiry } from "../lib/enquiry";
+import { mailer } from "../lib/mailer";
 import approvedPublicSnapshot from "../content/published-site.json";
 
 const router: IRouter = Router();
@@ -216,8 +216,8 @@ router.get("/objects/*path", async (req, res) => {
 });
 
 router.post("/queries", async (req, res) => {
-  const parsed = SubmitQueryBody.safeParse(req.body);
-  if (!parsed.success) {
+  const parsed = parseEnquiry(req.body);
+  if (!parsed.ok) {
     res.status(400).json({ error: "Please check the form and try again" });
     return;
   }
@@ -230,41 +230,9 @@ router.post("/queries", async (req, res) => {
   }
 
   try {
-    const submission = parsed.data;
+    const submission = parsed.value;
     await db.insert(querySubmissions).values(submission);
-
-    const subject = `Website query from ${submission.name}`;
-    const text = [
-      `Name: ${submission.name}`,
-      `Email: ${submission.email}`,
-      `Company: ${submission.company || "Not provided"}`,
-      "",
-      submission.message,
-    ].join("\n");
-    const raw = Buffer.from(
-      [
-        `To: ${destination}`,
-        `Reply-To: ${submission.email}`,
-        `Subject: ${subject}`,
-        "Content-Type: text/plain; charset=utf-8",
-        "",
-        text,
-      ].join("\r\n"),
-    ).toString("base64url");
-
-    const connectors = new ReplitConnectors();
-    const response = await connectors.proxy(
-      "google-mail",
-      "/gmail/v1/users/me/messages/send",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ raw }),
-      },
-    );
-    if (!response.ok) {
-      throw new Error(`Gmail delivery failed with ${response.status}`);
-    }
+    await mailer.send(buildEnquiryEmail(destination, submission));
 
     res.status(201).json(SubmitQueryResponse.parse({ accepted: true }));
   } catch (error) {

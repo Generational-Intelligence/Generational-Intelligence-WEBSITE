@@ -116,11 +116,19 @@ export interface PublicSite {
 }
 
 export interface QueryInput {
-  /** @minLength 2 */
+  /**
+     * @minLength 2
+     * @maxLength 120
+     */
   name: string;
+  /** @maxLength 254 */
   email: string;
+  /** @maxLength 160 */
   company?: string;
-  /** @minLength 10 */
+  /**
+     * @minLength 10
+     * @maxLength 5000
+     */
   message: string;
 }
 

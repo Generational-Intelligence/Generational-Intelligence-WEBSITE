@@ -19,10 +19,22 @@ import LogoWhite from '@assets/1_1789327486254.png';
 import LogoMarkWhite from '@assets/1_1789327474600.png';
 
 const formSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters.'),
-  email: z.string().email('Please enter a valid email address.'),
-  company: z.string().optional(),
-  message: z.string().min(10, 'Message must be at least 10 characters.'),
+  name: z
+    .string()
+    .trim()
+    .min(2, 'Name must be at least 2 characters.')
+    .max(120, 'Name must be 120 characters or fewer.'),
+  email: z
+    .string()
+    .trim()
+    .email('Please enter a valid email address.')
+    .max(254, 'Email must be 254 characters or fewer.'),
+  company: z.string().trim().max(160, 'Company must be 160 characters or fewer.').optional(),
+  message: z
+    .string()
+    .trim()
+    .min(10, 'Message must be at least 10 characters.')
+    .max(5000, 'Message must be 5,000 characters or fewer.'),
 });
 
 export default function Home() {

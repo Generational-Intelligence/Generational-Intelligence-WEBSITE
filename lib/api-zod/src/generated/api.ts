@@ -40,16 +40,22 @@ export const GetPublicSiteResponse = zod.object({
  * @summary Submit a public website query
  */
 export const submitQueryBodyNameMin = 2;
+export const submitQueryBodyNameMax = 120;
+
+export const submitQueryBodyEmailMax = 254;
+
+export const submitQueryBodyCompanyMax = 160;
 
 export const submitQueryBodyMessageMin = 10;
+export const submitQueryBodyMessageMax = 5000;
 
 
 
 export const SubmitQueryBody = zod.object({
-  "name": zod.string().min(submitQueryBodyNameMin),
-  "email": zod.string().email(),
-  "company": zod.string().optional(),
-  "message": zod.string().min(submitQueryBodyMessageMin)
+  "name": zod.string().min(submitQueryBodyNameMin).max(submitQueryBodyNameMax),
+  "email": zod.string().email().max(submitQueryBodyEmailMax),
+  "company": zod.string().max(submitQueryBodyCompanyMax).optional(),
+  "message": zod.string().min(submitQueryBodyMessageMin).max(submitQueryBodyMessageMax)
 })
 
 export const SubmitQueryResponse = zod.object({
