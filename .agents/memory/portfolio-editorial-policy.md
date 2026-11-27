@@ -28,3 +28,9 @@ Company/About information should be small and unobtrusive at the very bottom of 
 **Why:** The owner said it “doesn't need to be this huge, big section” and asked for a little company information alongside the legal details.
 
 **How to apply:** Preserve the footer-only About placement and its compact presentation in future website revisions unless the owner explicitly changes direction.
+
+Website refinements must follow the owner's specified compact scale without creative additions or an independent redesign. Treat size limits as caps; do not enlarge elements already smaller.
+
+**Why:** The owner repeatedly flagged oversized presentation and explicitly withheld creative discretion for the compact-scale refinement.
+
+**How to apply:** Reuse the existing components and approved ivory/evergreen design, copy and artwork; do not introduce new visual treatments while making sizing corrections.

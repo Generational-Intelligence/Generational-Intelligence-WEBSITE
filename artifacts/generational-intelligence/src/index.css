@@ -101,8 +101,7 @@
 }
 @layer base {
   html { scroll-behavior: smooth; overflow-x: clip; }
-  body { overflow-x: clip; font-size: 1rem; line-height: 1.6; }
-  @media (min-width: 768px) { body { font-size: 1.125rem; } }
+  body { overflow-x: clip; font-size: 1rem; line-height: 1.55; }
   h1, h2, h3 { font-family: var(--app-font-display); }
   section[id] { scroll-margin-top: 84px; }
   :focus-visible { outline: 2px solid #163F38; outline-offset: 3px; }

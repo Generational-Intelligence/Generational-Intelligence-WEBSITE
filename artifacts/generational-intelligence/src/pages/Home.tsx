@@ -44,11 +44,11 @@ const LEGAL = {
 };
 
 const wrap = 'w-full max-w-[1160px] mx-auto px-5 md:px-7 lg:px-10';
-const sectionPad = 'py-14 md:py-16 lg:py-[88px]';
+const sectionPad = 'py-9 md:py-14';
 const h2 = 'text-[30px] leading-[1.18] md:text-[38px] md:leading-[1.15] font-[650] tracking-[-0.015em] text-[#171C20]';
-const bodyText = 'text-base md:text-lg leading-[1.6]';
+const bodyText = 'text-base leading-[1.55]';
 const primaryBtn =
-  'inline-flex h-12 items-center justify-center gap-2 rounded-none bg-[#163F38] px-6 text-base font-semibold text-white hover:bg-[#102B27] transition-colors duration-150';
+  'inline-flex h-11 items-center justify-center gap-2 rounded-none bg-[#163F38] px-6 text-base font-semibold text-white hover:bg-[#102B27] transition-colors duration-150';
 
 export default function Home() {
   const { data: site, isLoading, isError, refetch, isFetching } = useGetPublicSite();
@@ -126,16 +126,16 @@ export default function Home() {
       <main id="main" tabIndex={-1} className="flex-1 scroll-mt-[84px] focus:outline-none">
         {/* Hero */}
         <section className="bg-[#F7F6F2]">
-          <div className={`${wrap} pt-16 pb-[72px] md:pt-16 md:pb-16 lg:pt-[104px] lg:pb-28`}>
+          <div className={`${wrap} py-10 md:py-16`}>
             <div className="max-w-[900px]">
               <p className="text-sm font-medium leading-[1.3] text-[#163F38]">Independent software development · Ireland</p>
               <h1
                 data-testid="text-tagline"
-                className="mt-5 text-[40px] leading-[1.12] md:text-[64px] md:leading-[1.08] font-[650] tracking-[-0.02em] text-balance"
+                className="mt-5 text-[34px] leading-[1.15] md:text-[52px] md:leading-[1.10] font-[650] tracking-[-0.02em] text-balance"
               >
                 Software built around real-world needs.
               </h1>
-              <p data-testid="text-description" className={`mt-6 max-w-[680px] ${bodyText}`}>
+              <p data-testid="text-description" className={`mt-6 max-w-[680px] ${bodyText} md:text-lg`}>
                 Generational Intelligence develops practical digital platforms that help businesses simplify operations, connect services and work with greater clarity.
               </p>
               <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
@@ -145,7 +145,7 @@ export default function Home() {
                 <a
                   href="#about"
                   data-testid="link-hero-about"
-                  className="inline-flex h-12 items-center text-base font-semibold text-[#171C20] underline underline-offset-4 decoration-[#DADDD7] hover:decoration-[#163F38] transition-colors duration-150"
+                  className="inline-flex h-11 items-center text-base font-semibold text-[#171C20] underline underline-offset-4 decoration-[#DADDD7] hover:decoration-[#163F38] transition-colors duration-150"
                 >
                   About our company
                 </a>
@@ -160,7 +160,7 @@ export default function Home() {
             <SectionHead eyebrow="Our software" id="software-heading" title="Focused products. Practical purpose.">
               Two platforms currently in development.
             </SectionHead>
-            <ul className="mt-10 lg:mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+            <ul className="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
               {projects.map((project) => (
                 <li key={project.slug} className="flex">
                   <ProjectCard project={project} />
@@ -265,7 +265,7 @@ export default function Home() {
       </main>
 
       <footer className="bg-[#102B27] text-[#F7F6F2]">
-        <div className={`${wrap} py-12 md:py-14 grid grid-cols-1 md:grid-cols-3 gap-10`}>
+        <div className={`${wrap} py-9 md:py-14 grid grid-cols-1 md:grid-cols-3 gap-10`}>
           <div>
             <CompanyBrand tone="dark" />
           </div>
@@ -303,7 +303,7 @@ export default function Home() {
             <p className="mt-2 max-w-[720px] text-sm leading-[1.6]">
               Generational Intelligence Limited is an Irish software development company building practical digital products for real-world needs.
             </p>
-            <p data-testid="text-legal" className="mt-2 text-[13px] leading-[1.5]">{site.companyName} · CRO {LEGAL.cro}</p>
+            <p data-testid="text-legal" className="mt-2 text-[13px] leading-[1.5]">CRO {LEGAL.cro}</p>
           </div>
         </div>
       </footer>
@@ -414,10 +414,10 @@ function ProjectCard({
   return (
     <article
       data-testid={`card-project-${project.slug}`}
-      className="flex w-full flex-col rounded-[14px] border border-[#DADDD7] bg-white p-6 lg:p-8 md:min-h-[455px]"
+      className="flex w-full flex-col rounded-[14px] border border-[#DADDD7] bg-white p-5 md:p-6"
     >
       {project.logoPath && (
-        <div className="flex h-[168px] w-full items-center justify-center bg-[#163F38] px-6">
+        <div className="flex h-[112px] md:h-[132px] w-full items-center justify-center bg-[#163F38] px-6">
           <img
             src={`${import.meta.env.BASE_URL}${project.logoPath.replace(/^\//, '')}`}
             alt={`${project.name} official logo`}
@@ -428,8 +428,8 @@ function ProjectCard({
           />
         </div>
       )}
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-        <h3 className="text-[28px] leading-[1.2] font-[650] tracking-[-0.015em]">{project.name}</h3>
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+        <h3 className="text-[21px] md:text-[24px] leading-[1.2] font-[650] tracking-[-0.015em]">{project.name}</h3>
         <span
           data-testid={`status-project-${project.slug}`}
           className="inline-flex shrink-0 items-center whitespace-nowrap rounded-md border border-[#DADDD7] px-2.5 py-1 text-sm font-medium text-[#171C20]"
@@ -438,9 +438,9 @@ function ProjectCard({
         </span>
       </div>
       <p className="mt-1 text-sm text-[#6E746F]">{project.category}</p>
-      <p className="mt-4 text-base md:text-lg leading-[1.6]">{project.description}</p>
+      <p className="mt-4 text-base leading-[1.55]">{project.description}</p>
       {website && (
-        <div className="mt-auto pt-6">
+        <div className="mt-auto pt-5">
           <a
             href={website.href}
             target="_blank"

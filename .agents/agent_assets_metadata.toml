@@ -28,3 +28,45 @@ mtime_ms = 1795789374122
 storage_uri = "gcs://replit-rams-assets-worf/rams/assets/repl:17751259-28da-4521-97da-0e0ca89b9305/1c588b58-3bab-4416-b1b4-50aa402b8974/bab0e629-b4d2-42eb-832f-ed1a548b6a08"
 storage_version_token = "1795789387556509"
 content_type = "image/jpeg"
+
+[[outputs]]
+id = "Eok8nTX84i79tkjFEYuiQ"
+uri = "file://.local/screenshots/gi-compact-1440.jpg"
+type = "image"
+title = "Compact desktop layout · 1440px"
+description = "Reduced hero, section spacing and product cards; original logos and compact footer preserved."
+logical_id = "d9659808-093d-4c3a-8df6-949cc5530568"
+content_hash = "sha256:53aefbc3d202d1a131a0c4877edd37e92eefc48215703e8290667a2ca0a913af"
+size = 183189
+mtime_ms = 1795794733943
+storage_uri = "gcs://replit-rams-assets-worf/rams/assets/repl:17751259-28da-4521-97da-0e0ca89b9305/d9659808-093d-4c3a-8df6-949cc5530568/e2b9d17a-c400-41b8-a6fd-31d16b1a1f6c"
+storage_version_token = "1795794756679013"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "IYh3xo-jVjluw_pg4THP3"
+uri = "file://.local/screenshots/gi-compact-768.jpg"
+type = "image"
+title = "Compact tablet layout · 768px"
+description = "Two balanced product cards with contained original logos and no visible clipping or overlap."
+logical_id = "0465b279-c7b5-4bd4-ad3f-83e9a9692043"
+content_hash = "sha256:a8cc4796a79513252a2a7d1d4c1890ed7171dbe53f8758b2cd25ec4e33245cc3"
+size = 172777
+mtime_ms = 1795794735619
+storage_uri = "gcs://replit-rams-assets-worf/rams/assets/repl:17751259-28da-4521-97da-0e0ca89b9305/0465b279-c7b5-4bd4-ad3f-83e9a9692043/91756537-935b-4d5a-a265-9136fdd90416"
+storage_version_token = "1795794757118860"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "D87gVFv58THht7av9t5MR"
+uri = "file://.local/screenshots/gi-compact-390.jpg"
+type = "image"
+title = "Compact mobile layout · 390px"
+description = "Smaller hero, stacked product cards and compact footer company information."
+logical_id = "b0ef97c2-ce74-4329-85b8-4f1d0374c5cf"
+content_hash = "sha256:79e0d3268a257f69429d6b6ac07f743479a179bfd11b1c41ef4d573370ed59d4"
+size = 148811
+mtime_ms = 1795794737043
+storage_uri = "gcs://replit-rams-assets-worf/rams/assets/repl:17751259-28da-4521-97da-0e0ca89b9305/b0ef97c2-ce74-4329-85b8-4f1d0374c5cf/f4a3ce3b-eb6b-44a1-a983-679b18fac845"
+storage_version_token = "1795794757570752"
+content_type = "image/jpeg"
