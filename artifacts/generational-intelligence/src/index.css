@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Manrope:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @plugin "@tailwindcss/typography";
@@ -45,8 +45,8 @@
 }
 
 :root, .dark {
-  --background: 48 23.809523810% 95.882352941%;
-  --foreground: 206.666666667 16.363636364% 10.784313725%;
+  --background: 60 15% 96%;
+  --foreground: 201 36% 13%;
   --border: 90 8.108108108% 85.490196078%;
   --card: 0 0% 100%;
   --card-foreground: 206.666666667 16.363636364% 10.784313725%;
@@ -54,7 +54,7 @@
   --popover: 0 0% 100%;
   --popover-foreground: 206.666666667 16.363636364% 10.784313725%;
   --popover-border: 90 8.108108108% 85.490196078%;
-  --primary: 169.756097561 48.235294118% 16.666666667%;
+  --primary: 194 43% 19%;
   --primary-foreground: 0 0% 100%;
   --secondary: 90 13.333333333% 94.117647059%;
   --secondary-foreground: 206.666666667 16.363636364% 10.784313725%;
@@ -65,11 +65,11 @@
   --destructive: 206.666666667 16.363636364% 10.784313725%;
   --destructive-foreground: 48 23.809523810% 95.882352941%;
   --input: 90 8.108108108% 85.490196078%;
-  --ring: 169.756097561 48.235294118% 16.666666667%;
+  --ring: 194 43% 19%;
   --app-font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
   --app-font-display: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
   --app-font-mono: 'Manrope', ui-sans-serif, system-ui, sans-serif;
-  --radius: 0.5rem;
+  --radius: 0.75rem;
   --button-outline: rgba(23, 28, 32, 0.1);
   --badge-outline: rgba(23, 28, 32, 0.06);
   --opaque-button-border-intensity: -8;
@@ -124,3 +124,7 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Corporate v3: dark navy focus on an ivory background */
+html { scroll-padding-top: 72px; }
+@media (min-width: 768px) { html { scroll-padding-top: 76px; } }
