@@ -1,0 +1,33 @@
+name: GI landing page checks
+on:
+  pull_request:
+    paths:
+      - 'artifacts/generational-intelligence/**'
+      - 'lib/**'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - '.github/workflows/gi-landing-checks.yml'
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Typecheck source libraries
+        run: pnpm run typecheck:libs
+      - name: Typecheck website
+        run: pnpm --filter @workspace/generational-intelligence typecheck
+      - name: Build website
+        run: pnpm --filter @workspace/generational-intelligence build
