@@ -1,41 +1,23 @@
 {
-  "companyName": "Generational Intelligence",
+  "companyName": "Generational Intelligence Limited",
   "tagline": "Practical software for complex, real-world work.",
-  "description": "We turn operational knowledge into clear digital tools—designed around how people actually work, decide and collaborate.",
+  "description": "Generational Intelligence Limited is an Irish software development company. We develop practical software designed around how people work, decide and collaborate.",
   "projects": [
     {
       "name": "GatherWell",
       "slug": "gatherwell",
-      "description": "Software that helps groups gather input, structure shared knowledge and move toward sound decisions.",
-      "category": "Collaboration software",
-      "status": "Deployed",
-      "logoPath": null,
+      "description": "Workplace food and catering management software.",
+      "category": "Workplace software",
+      "status": "In Development",
+      "logoPath": "/published-assets/gatherwell-logo.png",
       "imagePath": null
     },
     {
-      "name": "OrderFlow",
-      "slug": "orderflow",
-      "description": "A focused operational system for turning incoming requests into visible, manageable work.",
-      "category": "Operations software",
-      "status": "Deployed",
-      "logoPath": null,
-      "imagePath": null
-    },
-    {
-      "name": "Route Planner",
-      "slug": "route-planner",
-      "description": "A planning tool being developed to make complex routing choices clearer and easier to revise.",
-      "category": "Planning software",
-      "status": "In development",
-      "logoPath": null,
-      "imagePath": null
-    },
-    {
-      "name": "MORB",
-      "slug": "morb",
-      "description": "A developing software project for organising specialist operational information into a useful working view.",
-      "category": "Operational intelligence",
-      "status": "In development",
+      "name": "Engara",
+      "slug": "engara",
+      "description": "Software platform in development.",
+      "category": "Software",
+      "status": "In Development",
       "logoPath": null,
       "imagePath": null
     }

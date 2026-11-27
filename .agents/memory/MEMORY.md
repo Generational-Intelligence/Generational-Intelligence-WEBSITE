@@ -1,0 +1,1 @@
+- [Portfolio editorial policy](portfolio-editorial-policy.md) — Engara has no verified domain or feature brief; keep its description neutral until the owner approves specifics.

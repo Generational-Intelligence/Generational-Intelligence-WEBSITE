@@ -39,17 +39,17 @@ const router: IRouter = Router();
 const storage = new ObjectStorageService();
 const isProduction = process.env.NODE_ENV === "production";
 const approvedAssetsDir = fileURLToPath(
-  new URL("../../generational-intelligence/public/published-assets/", import.meta.url),
+  new URL("../../generational-intelligence/public/published-assets", import.meta.url),
 );
 const approvedSnapshotPath = fileURLToPath(
   new URL("../src/content/published-site.json", import.meta.url),
 );
 
 const companyCopy = {
-  companyName: "Generational Intelligence",
+  companyName: "Generational Intelligence Limited",
   tagline: "Practical software for complex, real-world work.",
   description:
-    "We turn operational knowledge into clear digital tools—designed around how people actually work, decide and collaborate.",
+    "Generational Intelligence Limited is an Irish software development company. We develop practical software designed around how people work, decide and collaborate.",
 };
 
 function projectPayload(project: typeof projects.$inferSelect) {

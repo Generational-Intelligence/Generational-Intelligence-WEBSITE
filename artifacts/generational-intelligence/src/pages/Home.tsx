@@ -88,10 +88,10 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background flex flex-col font-sans">
       <header className="px-6 py-12 md:px-16 flex justify-between items-start">
-        <div className="flex items-center gap-4 md:gap-6">
+        <div className="flex min-w-0 items-center gap-4 md:gap-6">
           <img src={LogoWhite} alt={site.companyName} className="h-10 md:h-16 w-auto object-contain" />
-          <span className="hidden md:block font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
-            Generational Intelligence
+          <span className="hidden md:block max-w-[260px] font-mono text-xs uppercase tracking-[0.15em] text-muted-foreground">
+            {site.companyName}
           </span>
         </div>
         <div className="font-mono text-[10px] md:text-xs text-muted-foreground uppercase tracking-widest text-right">
@@ -104,7 +104,7 @@ export default function Home() {
         <section className="py-24 md:py-40 max-w-4xl animate-in fade-in slide-in-from-bottom-8 duration-700">
           <p className="font-mono text-xs text-muted-foreground mb-8 uppercase tracking-widest flex items-center gap-3">
             <span className="w-1.5 h-1.5 bg-primary block"></span>
-            Operational Knowledge to Digital Tools
+            Software Development
           </p>
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-medium tracking-tight leading-[1.1] mb-10">
             {site.tagline}
@@ -142,7 +142,7 @@ export default function Home() {
             {devProjects.length > 0 && (
               <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300 fill-mode-both">
                 <h3 className="font-mono text-sm mb-12 text-muted-foreground flex items-center gap-4">
-                  <span>02</span>
+                  <span>{deployedProjects.length > 0 ? '02' : '01'}</span>
                   <div className="h-[1px] flex-1 bg-border" />
                   <span className="uppercase tracking-widest">In Development</span>
                 </h3>
@@ -249,12 +249,17 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="px-6 py-12 md:px-16 border-t border-border flex flex-col md:flex-row justify-between items-start md:items-center gap-6 text-xs font-mono text-muted-foreground">
-        <div className="flex items-center gap-4">
-          <img src={LogoMarkWhite} alt="Mark" className="h-5 w-5 opacity-60" />
-          <span className="uppercase tracking-widest">&copy; {new Date().getFullYear()} Generational Intelligence</span>
+      <footer className="px-6 py-12 md:px-16 border-t border-border flex flex-col lg:flex-row justify-between items-start gap-6 text-xs font-mono text-muted-foreground">
+        <div className="flex min-w-0 items-start gap-4">
+          <img src={LogoMarkWhite} alt="" className="h-5 w-5 shrink-0 opacity-60" />
+          <div className="max-w-2xl space-y-3 leading-relaxed">
+            <p className="uppercase tracking-widest">&copy; {new Date().getFullYear()} {site.companyName}</p>
+            <p>Registered in Ireland · Company registration (CRO) number: 797252</p>
+            <p>Registered office: 81 Edgeworth Court, Longwood, Co. Meath, A83 F402, Ireland</p>
+            <p>Business activity: Software development</p>
+          </div>
         </div>
-        <div className="uppercase tracking-widest">
+        <div className="shrink-0 uppercase tracking-widest">
           Discreet Software & Systems
         </div>
       </footer>
@@ -275,6 +280,7 @@ function ProjectCard({ project, muted = false }: { project: any, muted?: boolean
         <h4 className="text-3xl font-medium tracking-tight group-hover:text-primary transition-colors">
           {project.name}
         </h4>
+        <p className="mt-3 font-mono text-xs text-foreground">{project.status}</p>
       </div>
       <div className="mt-auto">
         <p className="text-base text-muted-foreground leading-relaxed">
