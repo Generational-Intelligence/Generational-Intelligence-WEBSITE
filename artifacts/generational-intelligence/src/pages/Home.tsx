@@ -29,7 +29,7 @@ function CompanyCard({company}:{company:(typeof companies)[number]}) {
   const Icon=company.icon;
   return <article className="gi-card" data-testid={'card-project-'+company.slug}>
     <div className="gi-card-brand">
-      {company.logo ? <span className="gi-logo-panel"><img src={import.meta.env.BASE_URL+'brand-assets/'+company.logo} alt={company.name+' official logo'} loading="lazy" /></span> :
+      {company.logo ? <><span className="gi-logo-panel"><img src={import.meta.env.BASE_URL+'brand-assets/'+company.logo} alt="" loading="lazy" /></span><h3 className="sr-only">{company.name}</h3></> :
         <><span className="gi-fallback-icon" aria-hidden="true">{Icon && <Icon size={25} />}</span><h3>{company.name}</h3></>}
     </div>
     <p>{company.description}</p>
