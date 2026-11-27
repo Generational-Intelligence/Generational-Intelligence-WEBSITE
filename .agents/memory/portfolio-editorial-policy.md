@@ -8,3 +8,9 @@ The second product's exact brand spelling is ANGARO, rendered as “Angaro”. T
 **Why:** The owner corrected the brand spelling and supplied approved copy to replace an earlier neutral placeholder. Product descriptions explain design purpose, not verified completed features, customers, pilots, revenues or availability.
 
 **How to apply:** Use the owner-approved copy without expanding it into unsupported claims. Do not edit either product's own codebase when working on this corporate website. Public portfolio removals should hide/archive internal records, not delete them; preserve historical snapshots even if their older wording differs.
+
+The owner identified the official Generational Intelligence emblem as a Triskelion and supplied original company, GatherWell and Angaro logo files. Preserve those original artworks without redrawing, recolouring, distorting or cropping important marks.
+
+**Why:** The owner explicitly required these particular supplied images, rather than generated or substitute branding.
+
+**How to apply:** Use neutral containment and proportional image sizing to adapt logos to the dark corporate website; keep original files and historic CMS records intact.

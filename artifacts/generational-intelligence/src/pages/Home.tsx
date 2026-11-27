@@ -17,8 +17,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, ArrowRight, Menu, X, RotateCw } from 'lucide-react';
-import LogoWhite from '@assets/1_1789327486254.png';
-import LogoMarkWhite from '@assets/1_1789327474600.png';
+import { CompanyBrand, triskelionLogo } from '@/components/company-brand';
 
 const formSchema = z.object({
   name: z.string().min(2, 'Please enter your name (at least 2 characters).'),
@@ -81,7 +80,7 @@ export default function Home() {
     return (
       <div className="min-h-[100dvh] flex items-center justify-center bg-background px-6">
         <div role="alert" className="max-w-md border border-border bg-card p-8 text-left">
-          <img src={LogoMarkWhite} alt="" className="h-8 w-8 mb-6 opacity-80" />
+          <img src={triskelionLogo} alt="Generational Intelligence Triskelion emblem" width={1600} height={1600} className="h-14 w-14 mb-6 object-contain" />
           <p className={label}>Unavailable</p>
           <h1 className="mt-3 text-2xl font-medium tracking-tight">This page could not be loaded</h1>
           <p className="mt-3 text-base text-muted-foreground leading-relaxed">
@@ -295,7 +294,7 @@ export default function Home() {
       <footer className="border-t border-border bg-card">
         <div className={`${wrap} py-12 md:py-16 grid grid-cols-1 md:grid-cols-12 gap-10`}>
           <div className="md:col-span-5 space-y-4">
-            <img src={LogoWhite} alt={site.companyName} className="h-10 w-auto" />
+            <CompanyBrand />
             <p className="text-base text-muted-foreground max-w-sm">{site.tagline}</p>
           </div>
           <nav aria-label="Footer" className="md:col-span-2">
@@ -346,8 +345,8 @@ function SiteHeader({ companyName }: { companyName: string }) {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
       <div className={`${wrap} h-[72px] flex items-center justify-between gap-6`}>
-        <a href="#main" className="flex items-center gap-4 min-w-0" data-testid="link-home">
-          <img src={LogoWhite} alt={companyName} className="h-9 md:h-10 w-auto" />
+        <a href="#main" aria-label={`${companyName} home`} className="flex items-center min-w-0" data-testid="link-home">
+          <CompanyBrand />
         </a>
         <nav aria-label="Primary" className="hidden md:block">
           <ul className="flex items-center gap-1">
@@ -433,7 +432,7 @@ function ProjectCard({
   project,
   index,
 }: {
-  project: { name: string; slug: string; category: string; status: string; description: string };
+  project: { name: string; slug: string; category: string; status: string; description: string; logoPath?: string | null };
   index: number;
 }) {
   return (
@@ -451,7 +450,19 @@ function ProjectCard({
           {project.status}
         </span>
       </div>
-      <h3 className="mt-10 md:mt-16 text-4xl md:text-5xl font-medium tracking-[-0.02em]">{project.name}</h3>
+      {project.logoPath && (
+        <div className="mt-8 flex h-48 items-center justify-center border border-border bg-black px-6">
+          <img
+            src={`${import.meta.env.BASE_URL}${project.logoPath.replace(/^\//, '')}`}
+            alt={`${project.name} official logo`}
+            className="h-full w-full max-w-64 object-contain"
+            loading="eager"
+            decoding="async"
+            data-testid={`logo-project-${project.slug}`}
+          />
+        </div>
+      )}
+      <h3 className="mt-8 text-4xl md:text-5xl font-medium tracking-[-0.02em]">{project.name}</h3>
       <p className="mt-6 text-base md:text-lg text-muted-foreground leading-relaxed">{project.description}</p>
     </article>
   );

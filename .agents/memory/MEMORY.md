@@ -1,1 +1,1 @@
-- [Portfolio editorial policy](portfolio-editorial-policy.md) — Angaro is the approved brand spelling; describe both products as design purposes, not launched or proven capabilities.
+- [Portfolio editorial policy](portfolio-editorial-policy.md) — Angaro spelling, pre-launch copy limits, and preservation of the owner's original logos and Triskelion identity.

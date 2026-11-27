@@ -9,7 +9,7 @@
       "description": "A workplace events marketplace and operations platform designed to help service providers and in-house teams source suppliers, prepare quotations, coordinate orders, and manage event costs and invoicing.",
       "category": "Workplace services",
       "status": "In Development",
-      "logoPath": "/published-assets/gatherwell-logo.png",
+      "logoPath": "/brand-assets/gatherwell-original.png",
       "imagePath": null
     },
     {
@@ -18,7 +18,7 @@
       "description": "A delivery operations platform designed for small and growing fleets, bringing route planning, dispatch, driver workflows and live delivery visibility into one coordinated system.",
       "category": "Delivery operations",
       "status": "In Development",
-      "logoPath": null,
+      "logoPath": "/brand-assets/angaro-original.png",
       "imagePath": null
     }
   ]
