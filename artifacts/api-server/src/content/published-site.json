@@ -1,13 +1,13 @@
 {
   "companyName": "Generational Intelligence Limited",
-  "tagline": "Practical software for real-world operations",
-  "description": "Generational Intelligence Limited is an Irish software development company creating practical digital platforms for workplace services and delivery operations.",
+  "tagline": "Software built to solve real problems.",
+  "description": "Generational Intelligence is an Irish software development company creating practical digital platforms that improve how businesses organise work, connect services and manage everyday operations.",
   "projects": [
     {
       "name": "GatherWell",
       "slug": "gatherwell",
-      "description": "A workplace events marketplace and operations platform designed to help service providers and in-house teams source suppliers, prepare quotations, coordinate orders, and manage event costs and invoicing.",
-      "category": "Workplace services",
+      "description": "GatherWell is an emerging marketplace and operations platform connecting workplaces with catering and service providers. It is being developed to simplify how businesses discover providers, coordinate requirements and manage workplace food and events.",
+      "category": "Workplace food, catering and services",
       "status": "In Development",
       "logoPath": "/brand-assets/gatherwell-original.png",
       "imagePath": null
@@ -15,8 +15,8 @@
     {
       "name": "Angaro",
       "slug": "angaro",
-      "description": "A delivery operations platform designed for small and growing fleets, bringing route planning, dispatch, driver workflows and live delivery visibility into one coordinated system.",
-      "category": "Delivery operations",
+      "description": "Angaro is a delivery operations platform being developed for small and growing fleets. It brings route planning, dispatch coordination, driver workflows and delivery visibility into one connected environment.",
+      "category": "Delivery and fleet operations",
       "status": "In Development",
       "logoPath": "/brand-assets/angaro-original.png",
       "imagePath": null

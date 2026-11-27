@@ -29,16 +29,21 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 const NAV = [
+  { id: 'software', label: 'Our Software' },
   { id: 'about', label: 'About' },
-  { id: 'software', label: 'Software' },
   { id: 'contact', label: 'Contact' },
 ];
+
+const PRODUCT_WEBSITES: Record<string, { href: string; label: string }> = {
+  gatherwell: { href: 'https://gatherwell.ie', label: 'Visit GatherWell Website' },
+  angaro: { href: 'https://angaro.ie', label: 'Visit Angaro Website' },
+};
 
 const LEGAL = {
   cro: '797252',
 };
 
-const wrap = 'w-full max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16';
+const wrap = 'w-full max-w-[1280px] mx-auto px-5 md:px-8';
 const label = 'font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground';
 
 export default function Home() {
@@ -116,54 +121,48 @@ export default function Home() {
       <main id="main" tabIndex={-1} className="flex-1 scroll-mt-[88px]">
         {/* Hero */}
         <section className="border-b border-border">
-          <div className={`${wrap} pt-16 pb-16 md:pt-24 md:pb-24`}>
+          <div className={`${wrap} py-14 md:py-24`}>
             <p className={`${label} flex items-center gap-3 mb-8`}>
               <span aria-hidden="true" className="h-2 w-2 bg-foreground" />
               Software development · Ireland
             </p>
             <h1
               data-testid="text-tagline"
-              className="max-w-5xl text-[2.5rem] leading-[1.05] sm:text-6xl lg:text-[5.25rem] font-medium tracking-[-0.03em] text-balance"
+              className="max-w-[720px] text-4xl md:text-[4rem] leading-[1.1] font-medium tracking-[-0.03em] text-balance"
             >
               {site.tagline}
             </h1>
-            <div className="mt-10 md:mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+            <div className="mt-6 max-w-[720px]">
               <p
                 data-testid="text-description"
-                className="lg:col-span-7 text-lg md:text-xl text-muted-foreground leading-relaxed"
+                className="text-base md:text-xl text-muted-foreground leading-relaxed"
               >
                 {site.description}
               </p>
-              <div className="lg:col-span-5 flex flex-wrap gap-3 lg:justify-end">
+              <div className="mt-6">
                 <a
                   href="#software"
                   data-testid="link-hero-software"
-                  className="inline-flex h-12 items-center gap-3 bg-foreground px-6 font-mono text-xs uppercase tracking-[0.14em] text-background hover:bg-foreground/90 transition-colors"
+                  className="inline-flex min-h-12 items-center gap-3 bg-foreground px-6 text-base font-medium text-background hover:bg-foreground/90 transition-colors duration-200"
                 >
-                  View our software <ArrowRight aria-hidden="true" className="h-4 w-4" />
-                </a>
-                <a
-                  href="#contact"
-                  data-testid="link-hero-contact"
-                  className="inline-flex h-12 items-center border border-border px-6 font-mono text-xs uppercase tracking-[0.14em] hover:border-foreground transition-colors"
-                >
-                  Contact us
+                  Explore our software <ArrowRight aria-hidden="true" className="h-4 w-4" />
                 </a>
               </div>
+              <p className="mt-6 text-base md:text-xl text-muted-foreground leading-relaxed">
+                Our products are developed around real-world challenges, with a focus on clarity, efficiency and useful technology.
+              </p>
             </div>
           </div>
         </section>
 
         {/* Software */}
         <section id="software" aria-labelledby="software-heading" className="border-b border-border">
-          <div className={`${wrap} py-16 md:py-24`}>
-            <SectionHead index="01" id="software-heading" title="Software in development">
-              Two operational platforms, currently in development ahead of pilot use.
-            </SectionHead>
-            <ul className="mt-10 md:mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-              {site.projects.map((project, i) => (
+          <div className={`${wrap} py-14 md:py-20`}>
+            <SectionHead index="01" id="software-heading" title="Our software" />
+            <ul className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+              {site.projects.map((project) => (
                 <li key={project.slug} className="flex">
-                  <ProjectCard project={project} index={i + 1} />
+                  <ProjectCard project={project} />
                 </li>
               ))}
             </ul>
@@ -172,16 +171,16 @@ export default function Home() {
 
         {/* About */}
         <section id="about" aria-labelledby="about-heading" className="border-b border-border">
-          <div className={`${wrap} py-16 md:py-24 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16`}>
+          <div className={`${wrap} py-14 md:py-20 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12`}>
             <div className="lg:col-span-5">
               <SectionHead index="02" id="about-heading" title="About us" />
             </div>
             <div className="lg:col-span-7 space-y-8">
-              <p className="text-lg md:text-xl leading-relaxed">
-                {site.companyName} is a private limited company registered in Ireland. We design and
-                build software for workplace services and delivery operations.
+              <p className="text-base md:text-lg leading-relaxed">
+                Generational Intelligence develops software around practical problems experienced by businesses and the people running them. Our approach begins with understanding how work actually happens, identifying unnecessary complexity and designing technology that helps people operate with greater clarity and control.
               </p>
-              <dl className="grid grid-cols-1 sm:grid-cols-2 border-t border-l border-border">
+              <p className="text-base text-muted-foreground">{site.companyName} is a private limited company registered in Ireland.</p>
+              <dl className="grid grid-cols-1 md:grid-cols-2 border-t border-l border-border">
                 <Fact term="Legal entity" value={site.companyName} />
                 <Fact term="Company number" value={`CRO ${LEGAL.cro}`} />
                 <Fact term="Activity" value="Software development" />
@@ -193,10 +192,10 @@ export default function Home() {
 
         {/* Contact */}
         <section id="contact" aria-labelledby="contact-heading">
-          <div className={`${wrap} py-16 md:py-24 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16`}>
+          <div className={`${wrap} py-14 md:py-20 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12`}>
             <div className="lg:col-span-4">
-              <SectionHead index="03" id="contact-heading" title="Contact us">
-                For business enquiries, partnerships or pilot interest, send us a short note and we will reply by email.
+              <SectionHead index="03" id="contact-heading" title="Let’s discuss what you’re building.">
+                For business enquiries, potential partnerships and product pilot interest, get in touch with our team.
               </SectionHead>
             </div>
             <div className="lg:col-span-8">
@@ -205,7 +204,7 @@ export default function Home() {
                   onSubmit={form.handleSubmit(onSubmit)}
                   noValidate
                   aria-busy={submitQuery.isPending}
-                  className="border border-border bg-card p-6 md:p-10 space-y-6"
+                  className="border border-border bg-card p-6 md:p-8 space-y-6"
                 >
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
@@ -314,6 +313,18 @@ export default function Home() {
             <p className="text-foreground">{site.companyName}</p>
             <p>Registered in Ireland · CRO {LEGAL.cro}</p>
             <p>Business activity: Software development</p>
+            <ul className="pt-4">
+              {site.projects.map((project) => {
+                const website = PRODUCT_WEBSITES[project.slug];
+                return website ? (
+                  <li key={project.slug}>
+                    <a href={website.href} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center text-foreground underline underline-offset-4 hover:text-muted-foreground transition-colors duration-200">
+                      {website.label}
+                    </a>
+                  </li>
+                ) : null;
+              })}
+            </ul>
           </div>
         </div>
         <div className="border-t border-border">
@@ -355,7 +366,7 @@ function SiteHeader({ companyName }: { companyName: string }) {
                 <a
                   href={`#${n.id}`}
                   data-testid={`link-nav-${n.id}`}
-                  className="inline-flex h-11 items-center px-4 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground hover:text-foreground transition-colors"
+                  className="inline-flex h-11 items-center px-4 text-base text-foreground hover:text-muted-foreground transition-colors duration-200"
                 >
                   {n.label}
                 </a>
@@ -384,7 +395,7 @@ function SiteHeader({ companyName }: { companyName: string }) {
                   href={`#${n.id}`}
                   onClick={() => setOpen(false)}
                   data-testid={`link-mobile-${n.id}`}
-                  className="flex h-14 items-center justify-between font-mono text-sm uppercase tracking-[0.14em]"
+                  className="flex h-14 items-center justify-between text-base"
                 >
                   {n.label} <ArrowRight aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
                 </a>
@@ -430,18 +441,17 @@ function Fact({ term, value }: { term: string; value: string }) {
 
 function ProjectCard({
   project,
-  index,
 }: {
   project: { name: string; slug: string; category: string; status: string; description: string; logoPath?: string | null };
-  index: number;
 }) {
+  const website = PRODUCT_WEBSITES[project.slug];
   return (
     <article
       data-testid={`card-project-${project.slug}`}
-      className="flex w-full flex-col border border-border bg-card p-6 md:p-10 hover:border-muted-foreground/60 transition-colors"
+      className="flex w-full flex-col border border-border bg-card p-6 md:p-8 hover:border-muted-foreground/60 transition-colors duration-200"
     >
-      <div className="flex flex-col items-start gap-4 xl:flex-row xl:items-center xl:justify-between">
-        <span className={label}>{String(index).padStart(2, '0')} · {project.category}</span>
+      <div className="flex flex-col items-start gap-3">
+        <span className="min-h-10 text-sm leading-5 text-muted-foreground">{project.category}</span>
         <span
           data-testid={`status-project-${project.slug}`}
           className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap border border-foreground/40 px-3 py-1.5 font-mono text-xs uppercase tracking-[0.1em]"
@@ -451,7 +461,7 @@ function ProjectCard({
         </span>
       </div>
       {project.logoPath && (
-        <div className="mt-8 flex h-48 items-center justify-center border border-border bg-black px-6">
+        <div className="mt-6 flex h-40 items-center justify-center border border-border bg-black px-6">
           <img
             src={`${import.meta.env.BASE_URL}${project.logoPath.replace(/^\//, '')}`}
             alt={`${project.name} official logo`}
@@ -462,8 +472,15 @@ function ProjectCard({
           />
         </div>
       )}
-      <h3 className="mt-8 text-4xl md:text-5xl font-medium tracking-[-0.02em]">{project.name}</h3>
-      <p className="mt-6 text-base md:text-lg text-muted-foreground leading-relaxed">{project.description}</p>
+      <h3 className="mt-6 text-3xl md:text-4xl font-medium tracking-[-0.02em]">{project.name}</h3>
+      <p className="mt-4 text-base md:text-lg text-muted-foreground leading-relaxed">{project.description}</p>
+      {website && (
+        <div className="mt-auto pt-6">
+          <a href={website.href} target="_blank" rel="noopener noreferrer" data-testid={`link-project-${project.slug}`} className="inline-flex min-h-11 items-center text-base text-foreground underline underline-offset-4 hover:text-muted-foreground transition-colors duration-200">
+            {website.label}
+          </a>
+        </div>
+      )}
     </article>
   );
 }
