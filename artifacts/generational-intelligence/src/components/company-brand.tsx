@@ -7,7 +7,7 @@ export const triskelionLogo = `${import.meta.env.BASE_URL}brand-assets/gi-triske
 export function CompanyBrand({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
   return (
     <span className="inline-flex min-w-0 items-center gap-3">
-      <span className="inline-flex h-9 w-9 md:h-[42px] md:w-[42px] shrink-0 items-center justify-center rounded-md bg-[#163F38]">
+      <span className="inline-flex h-9 w-9 md:h-[38px] md:w-[38px] shrink-0 items-center justify-center rounded-md bg-[#173F4B]">
         <img
           src={triskelionLogo}
           alt="Generational Intelligence Triskelion emblem"
@@ -18,8 +18,8 @@ export function CompanyBrand({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
         />
       </span>
       <span
-        className={`text-[15px] md:text-base font-semibold leading-tight tracking-[-0.01em] ${
-          tone === 'dark' ? 'text-[#F7F6F2]' : 'text-[#171C20]'
+        className={`text-[15px] md:text-[16px] font-semibold leading-tight tracking-[-0.01em] ${
+          tone === 'dark' ? 'text-[#F7F7F4]' : 'text-[#15242D]'
         }`}
       >
         Generational Intelligence

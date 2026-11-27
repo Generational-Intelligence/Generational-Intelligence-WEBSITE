@@ -29,9 +29,9 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 const NAV = [
-  { id: 'software', label: 'Our Software' },
-  { id: 'about', label: 'About' },
+  { id: 'software', label: 'Our software' },
   { id: 'contact', label: 'Contact' },
+  { id: 'about', label: 'About' },
 ];
 
 const PRODUCT_WEBSITES: Record<string, { href: string; label: string }> = {
@@ -43,12 +43,12 @@ const LEGAL = {
   cro: '797252',
 };
 
-const wrap = 'w-full max-w-[1160px] mx-auto px-5 md:px-7 lg:px-10';
-const sectionPad = 'py-9 md:py-14';
-const h2 = 'text-[30px] leading-[1.18] md:text-[38px] md:leading-[1.15] font-[650] tracking-[-0.015em] text-[#171C20]';
+const wrap = 'w-full max-w-[1080px] mx-auto px-5 md:px-7 lg:px-8';
+const sectionPad = 'py-10 md:py-14';
+const h2 = 'text-[27px] leading-[1.17] md:text-[32px] md:leading-[1.16] font-[650] tracking-[-0.025em] text-[#15242D]';
 const bodyText = 'text-base leading-[1.55]';
 const primaryBtn =
-  'inline-flex h-11 items-center justify-center gap-2 rounded-none bg-[#163F38] px-6 text-base font-semibold text-white hover:bg-[#102B27] transition-colors duration-150';
+  'inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-[#173F4B] px-5 text-[15px] font-semibold text-white hover:bg-[#102E39] transition-colors duration-150';
 
 export default function Home() {
   const { data: site, isLoading, isError, refetch, isFetching } = useGetPublicSite();
@@ -87,13 +87,13 @@ export default function Home() {
 
   if (isError || !site) {
     return (
-      <div className="min-h-[100dvh] flex items-center justify-center bg-[#F7F6F2] px-6">
-        <div role="alert" className="max-w-md rounded-[14px] border border-[#DADDD7] bg-white p-8 text-left">
-          <span className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-md bg-[#163F38]">
+      <div className="min-h-[100dvh] flex items-center justify-center bg-[#F7F7F4] px-6">
+        <div role="alert" className="max-w-md rounded-[14px] border border-[#D8E0E2] bg-white p-8 text-left">
+          <span className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-md bg-[#173F4B]">
             <img src={triskelionLogo} alt="Generational Intelligence Triskelion emblem" width={1600} height={1600} className="h-full w-full object-contain" />
           </span>
-          <h1 className="text-2xl font-[650] tracking-tight text-[#171C20]">This page could not be loaded</h1>
-          <p className="mt-3 text-base text-[#6E746F] leading-relaxed">
+          <h1 className="text-2xl font-[650] tracking-tight text-[#15242D]">This page could not be loaded</h1>
+          <p className="mt-3 text-base text-[#586660] leading-relaxed">
             Please check your connection and try again in a moment.
           </p>
           <Button
@@ -113,10 +113,10 @@ export default function Home() {
   const projects = site.projects;
 
   return (
-    <div className="min-h-[100dvh] bg-[#F7F6F2] text-[#171C20] flex flex-col font-sans overflow-x-clip">
+    <div className="min-h-[100dvh] bg-[#F7F7F4] text-[#15242D] flex flex-col font-sans overflow-x-clip">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:rounded-md focus:bg-[#163F38] focus:text-white focus:px-4 focus:py-3 text-sm font-medium"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:rounded-md focus:bg-[#173F4B] focus:text-white focus:px-4 focus:py-3 text-sm font-medium"
       >
         Skip to content
       </a>
@@ -125,27 +125,27 @@ export default function Home() {
 
       <main id="main" tabIndex={-1} className="flex-1 scroll-mt-[84px] focus:outline-none">
         {/* Hero */}
-        <section className="bg-[#F7F6F2]">
-          <div className={`${wrap} py-10 md:py-16`}>
-            <div className="max-w-[900px]">
-              <p className="text-sm font-medium leading-[1.3] text-[#163F38]">Independent software development · Ireland</p>
+        <section className="bg-[#F7F7F4]">
+          <div className={`${wrap} py-12 md:py-[66px]`}>
+            <div className="max-w-[760px]">
+              <p className="text-sm font-semibold leading-[1.3] tracking-[0.01em] text-[#1C5262]">Independent software development · Ireland</p>
               <h1
                 data-testid="text-tagline"
-                className="mt-5 text-[34px] leading-[1.15] md:text-[52px] md:leading-[1.10] font-[650] tracking-[-0.02em] text-balance"
+                className="mt-4 max-w-[740px] text-[34px] leading-[1.13] md:text-[50px] md:leading-[1.1] font-[650] tracking-[-0.035em] text-balance"
               >
                 Software built around real-world needs.
               </h1>
-              <p data-testid="text-description" className={`mt-6 max-w-[680px] ${bodyText} md:text-lg`}>
+              <p data-testid="text-description" className={`mt-4 max-w-[660px] ${bodyText} md:text-lg text-[#53636B]`}>
                 Generational Intelligence develops practical digital platforms that help businesses simplify operations, connect services and work with greater clarity.
               </p>
-              <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
+              <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
                 <a href="#software" data-testid="link-hero-software" className={primaryBtn}>
                   Explore our software <ArrowRight aria-hidden="true" className="h-4 w-4" />
                 </a>
                 <a
                   href="#about"
                   data-testid="link-hero-about"
-                  className="inline-flex h-11 items-center text-base font-semibold text-[#171C20] underline underline-offset-4 decoration-[#DADDD7] hover:decoration-[#163F38] transition-colors duration-150"
+                  className="inline-flex h-11 items-center text-base font-semibold text-[#15242D] underline underline-offset-4 decoration-[#D8E0E2] hover:decoration-[#173F4B] transition-colors duration-150"
                 >
                   About our company
                 </a>
@@ -155,12 +155,12 @@ export default function Home() {
         </section>
 
         {/* Software */}
-        <section id="software" aria-labelledby="software-heading" className="bg-[#F0F2EE] border-y border-[#DADDD7]">
+        <section id="software" aria-labelledby="software-heading" className="bg-[#EAF0F0] border-y border-[#D8E0E2]">
           <div className={`${wrap} ${sectionPad}`}>
-            <SectionHead eyebrow="Our software" id="software-heading" title="Focused products. Practical purpose.">
-              Two platforms currently in development.
+            <SectionHead eyebrow="Our software" id="software-heading" title="Two focused products. One practical approach.">
+              Both platforms are in development.
             </SectionHead>
-            <ul className="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+            <ul className="mt-7 grid grid-cols-1 min-[800px]:grid-cols-2 gap-5 lg:gap-6">
               {projects.map((project) => (
                 <li key={project.slug} className="flex">
                   <ProjectCard project={project} />
@@ -171,10 +171,10 @@ export default function Home() {
         </section>
 
         {/* Contact */}
-        <section id="contact" aria-labelledby="contact-heading" className="bg-[#F0F2EE] border-t border-[#DADDD7]">
-          <div className={`${wrap} ${sectionPad} grid grid-cols-1 lg:grid-cols-[40fr_60fr] items-start gap-8 lg:gap-14`}>
-            <SectionHead id="contact-heading" title="Start a conversation.">
-              For business enquiries, partnerships or interest in our developing platforms, send us a message.
+        <section id="contact" aria-labelledby="contact-heading" className="bg-white border-t border-[#D8E0E2]">
+          <div className={`${wrap} ${sectionPad} grid grid-cols-1 lg:grid-cols-[34fr_66fr] items-start gap-7 lg:gap-12`}>
+            <SectionHead id="contact-heading" title="Get in touch.">
+              For business enquiries, partnerships or interest in either platform, send us a message.
             </SectionHead>
             <div>
               <Form {...form}>
@@ -182,7 +182,7 @@ export default function Home() {
                   onSubmit={form.handleSubmit(onSubmit)}
                   noValidate
                   aria-busy={submitQuery.isPending}
-                  className="rounded-[14px] border border-[#DADDD7] bg-white p-6 lg:p-8 space-y-6"
+                  className="rounded-xl border border-[#D8E0E2] bg-[#F7F9F8] p-5 md:p-6 space-y-5"
                 >
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
@@ -237,7 +237,7 @@ export default function Home() {
                           <Textarea
                             data-testid="input-message"
                             placeholder="Tell us briefly what you would like to discuss."
-                            className={`${fieldInput} min-h-[148px] py-3 resize-y`}
+                            className={`${fieldInput} min-h-[120px] py-3 resize-y`}
                             {...field}
                           />
                         </FormControl>
@@ -246,7 +246,7 @@ export default function Home() {
                     )}
                   />
                   <div className="pt-2 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
-                    <p className="text-[15px] leading-[1.55] text-[#6E746F]">Your enquiry is sent privately to our team.</p>
+                    <p className="text-[15px] leading-[1.55] text-[#586660]">Your enquiry is sent privately to our team.</p>
                     <Button
                       type="submit"
                       disabled={submitQuery.isPending}
@@ -264,13 +264,17 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="bg-[#102B27] text-[#F7F6F2]">
-        <div className={`${wrap} py-9 md:py-14 grid grid-cols-1 md:grid-cols-3 gap-10`}>
-          <div>
+      <footer className="bg-[#102731] text-[#F7F7F4]">
+        <div className={`${wrap} py-10 grid grid-cols-1 md:grid-cols-[1.6fr_1fr_1fr] gap-8 md:gap-10`}>
+          <div id="about" aria-labelledby="footer-about-heading" className="scroll-mt-[84px]">
             <CompanyBrand tone="dark" />
+            <h2 id="footer-about-heading" className="mt-4 text-sm font-semibold">About Generational Intelligence</h2>
+            <p className="mt-2 max-w-[360px] text-sm leading-[1.65] text-[#DCE5E4]">
+              Generational Intelligence Limited develops practical digital software for businesses and their everyday operations.
+            </p>
           </div>
-          <nav aria-label="Our Software">
-            <p className="text-sm font-semibold mb-3">Our Software</p>
+          <nav aria-label="Our software">
+            <p className="text-sm font-semibold mb-2">Our software</p>
             <ul>
               {projects.map((project) => {
                 const website = PRODUCT_WEBSITES[project.slug];
@@ -285,25 +289,17 @@ export default function Home() {
             </ul>
           </nav>
           <nav aria-label="Company">
-            <p className="text-sm font-semibold mb-3">Company</p>
+            <p className="text-sm font-semibold mb-2">Company</p>
             <ul>
-              {NAV.filter((n) => n.id !== 'software').map((n) => (
-                <li key={n.id}>
-                  <a href={`#${n.id}`} data-testid={`link-footer-${n.id}`} className={footerLink}>
-                    {n.label}
-                  </a>
-                </li>
-              ))}
+              <li><a href="#contact" data-testid="link-footer-contact" className={footerLink}>Contact</a></li>
+              <li><a href="#software" data-testid="link-footer-software" className={footerLink}>Our software</a></li>
             </ul>
           </nav>
         </div>
-        <div id="about" aria-labelledby="footer-about-heading" className="scroll-mt-[84px] border-t border-[#F7F6F2]/20">
-          <div className={`${wrap} py-6`}>
-            <h2 id="footer-about-heading" className="text-sm font-semibold leading-[1.55]">About Generational Intelligence</h2>
-            <p className="mt-2 max-w-[720px] text-sm leading-[1.6]">
-              Generational Intelligence Limited is an Irish software development company building practical digital products for real-world needs.
-            </p>
-            <p data-testid="text-legal" className="mt-2 text-[13px] leading-[1.5]">CRO {LEGAL.cro}</p>
+        <div className="border-t border-white/20">
+          <div className={`${wrap} py-4 flex flex-wrap gap-x-5 gap-y-2 items-center justify-between text-[13px] leading-[1.5] text-[#DCE5E4]`}>
+            <p data-testid="text-legal">Generational Intelligence Limited · CRO {LEGAL.cro}</p>
+            <p>© {new Date().getFullYear()} Generational Intelligence</p>
           </div>
         </div>
       </footer>
@@ -312,11 +308,11 @@ export default function Home() {
 }
 
 const footerLink =
-  'inline-flex min-h-11 items-center text-[15px] text-[#F7F6F2] underline-offset-4 hover:underline transition-colors duration-150';
-const fieldLabel = 'text-sm font-semibold text-[#171C20]';
+  'inline-flex min-h-10 items-center text-sm text-[#DCE5E4] underline-offset-4 hover:text-white hover:underline transition-colors duration-150';
+const fieldLabel = 'text-sm font-semibold text-[#15242D]';
 const fieldInput =
-  'h-12 rounded-none border border-[#6E746F] bg-white px-4 text-base text-[#171C20] placeholder:text-[#6E746F] focus-visible:ring-2 focus-visible:ring-[#163F38] focus-visible:ring-offset-0 focus-visible:border-[#163F38] aria-[invalid=true]:border-[#171C20] aria-[invalid=true]:border-2';
-const fieldError = 'text-sm font-medium text-[#171C20]';
+  'min-h-11 rounded-md border border-[#A9B6B8] bg-white px-3 text-base text-[#15242D] placeholder:text-[#64727A] focus-visible:ring-2 focus-visible:ring-[#1C5262] focus-visible:ring-offset-0 focus-visible:border-[#1C5262] aria-[invalid=true]:border-[#15242D] aria-[invalid=true]:border-2';
+const fieldError = 'text-sm font-medium text-[#15242D]';
 
 function SiteHeader({ companyName }: { companyName: string }) {
   const [open, setOpen] = useState(false);
@@ -329,8 +325,8 @@ function SiteHeader({ companyName }: { companyName: string }) {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[#DADDD7] bg-[#F7F6F2]">
-      <div className={`${wrap} h-[71px] md:h-[83px] flex items-center justify-between gap-6`}>
+    <header className="sticky top-0 z-50 border-b border-[#D8E0E2] bg-[#F7F7F4]/95 backdrop-blur-md">
+      <div className={`${wrap} h-16 md:h-[68px] flex items-center justify-between gap-6`}>
         <a href="#main" aria-label={`${companyName} home`} className="flex items-center min-w-0 rounded-md" data-testid="link-home">
           <CompanyBrand />
         </a>
@@ -341,7 +337,7 @@ function SiteHeader({ companyName }: { companyName: string }) {
                 <a
                   href={`#${n.id}`}
                   data-testid={`link-nav-${n.id}`}
-                  className="inline-flex h-11 items-center text-sm leading-[1.3] font-medium text-[#171C20] hover:text-[#163F38] hover:underline underline-offset-4 transition-colors duration-150"
+                  className="inline-flex h-11 items-center text-sm leading-[1.3] font-medium text-[#15242D] hover:text-[#173F4B] hover:underline underline-offset-4 transition-colors duration-150"
                 >
                   {n.label}
                 </a>
@@ -351,7 +347,7 @@ function SiteHeader({ companyName }: { companyName: string }) {
         </nav>
         <button
           type="button"
-          className="md:hidden inline-flex h-11 w-11 items-center justify-center rounded-lg border border-[#DADDD7] text-[#171C20]"
+          className="md:hidden inline-flex h-11 w-11 items-center justify-center rounded-lg border border-[#D8E0E2] text-[#15242D]"
           aria-expanded={open}
           aria-controls="mobile-nav"
           aria-label={open ? 'Close menu' : 'Open menu'}
@@ -362,17 +358,17 @@ function SiteHeader({ companyName }: { companyName: string }) {
         </button>
       </div>
       {open && (
-        <nav id="mobile-nav" aria-label="Mobile" className="md:hidden border-t border-[#DADDD7] bg-[#F7F6F2]">
+        <nav id="mobile-nav" aria-label="Mobile" className="md:hidden border-t border-[#D8E0E2] bg-[#F7F7F4]">
           <ul className={`${wrap} py-2`}>
             {NAV.map((n) => (
-              <li key={n.id} className="border-b border-[#DADDD7] last:border-0">
+              <li key={n.id} className="border-b border-[#D8E0E2] last:border-0">
                 <a
                   href={`#${n.id}`}
                   onClick={() => setOpen(false)}
                   data-testid={`link-mobile-${n.id}`}
                   className="flex h-14 items-center justify-between text-base font-medium"
                 >
-                  {n.label} <ArrowRight aria-hidden="true" className="h-4 w-4 text-[#163F38]" />
+                  {n.label} <ArrowRight aria-hidden="true" className="h-4 w-4 text-[#173F4B]" />
                 </a>
               </li>
             ))}
@@ -396,11 +392,11 @@ function SectionHead({
 }) {
   return (
     <div className="max-w-2xl">
-      {eyebrow && <p className="mb-3 text-sm font-medium leading-[1.3] text-[#163F38]">{eyebrow}</p>}
+      {eyebrow && <p className="mb-3 text-sm font-medium leading-[1.3] text-[#173F4B]">{eyebrow}</p>}
       <h2 id={id} className={h2}>
         {title}
       </h2>
-      {children && <p className={`mt-4 ${bodyText} text-[#171C20]`}>{children}</p>}
+      {children && <p className={`mt-4 ${bodyText} text-[#15242D]`}>{children}</p>}
     </div>
   );
 }
@@ -414,14 +410,14 @@ function ProjectCard({
   return (
     <article
       data-testid={`card-project-${project.slug}`}
-      className="flex w-full flex-col rounded-[14px] border border-[#DADDD7] bg-white p-5 md:p-6"
+      className="flex w-full flex-col rounded-xl border border-[#D8E0E2] bg-white p-5 md:p-6"
     >
       {project.logoPath && (
-        <div className="flex h-[112px] md:h-[132px] w-full items-center justify-center bg-[#163F38] px-6">
+        <div className="flex h-24 w-full items-center justify-start rounded-md bg-[#102731] px-5">
           <img
             src={`${import.meta.env.BASE_URL}${project.logoPath.replace(/^\//, '')}`}
             alt={`${project.name} official logo`}
-            className="h-full w-full max-w-64 object-contain"
+            className="max-h-[70px] h-auto max-w-[220px] w-auto object-contain"
             loading="eager"
             decoding="async"
             data-testid={`logo-project-${project.slug}`}
@@ -432,13 +428,13 @@ function ProjectCard({
         <h3 className="text-[21px] md:text-[24px] leading-[1.2] font-[650] tracking-[-0.015em]">{project.name}</h3>
         <span
           data-testid={`status-project-${project.slug}`}
-          className="inline-flex shrink-0 items-center whitespace-nowrap rounded-md border border-[#DADDD7] px-2.5 py-1 text-sm font-medium text-[#171C20]"
+          className="inline-flex shrink-0 items-center whitespace-nowrap rounded-md border border-[#D8E0E2] px-2.5 py-1 text-sm font-medium text-[#15242D]"
         >
           {project.status}
         </span>
       </div>
-      <p className="mt-1 text-sm text-[#6E746F]">{project.category}</p>
-      <p className="mt-4 text-base leading-[1.55]">{project.description}</p>
+      <p className="mt-1 text-sm text-[#586660]">{project.category}</p>
+      <p className="mt-3 text-[15px] leading-[1.65] text-[#465860]">{project.description}</p>
       {website && (
         <div className="mt-auto pt-5">
           <a
@@ -446,7 +442,7 @@ function ProjectCard({
             target="_blank"
             rel="noopener noreferrer"
             data-testid={`link-project-${project.slug}`}
-            className="inline-flex min-h-11 items-center gap-2 text-base font-semibold text-[#163F38] underline-offset-4 hover:underline transition-colors duration-150"
+            className="inline-flex min-h-11 items-center gap-2 text-[15px] font-semibold text-[#1C5262] underline-offset-4 hover:underline transition-colors duration-150"
           >
             {website.label} <ArrowRight aria-hidden="true" className="h-4 w-4" />
           </a>
@@ -458,16 +454,16 @@ function ProjectCard({
 
 function LoadingState() {
   return (
-    <div className="min-h-[100dvh] bg-[#F7F6F2]" aria-busy="true" aria-live="polite">
+    <div className="min-h-[100dvh] bg-[#F7F7F4]" aria-busy="true" aria-live="polite">
       <span className="sr-only">Loading</span>
-      <div className="border-b border-[#DADDD7] h-[72px] md:h-[84px]" />
+      <div className="border-b border-[#D8E0E2] h-[72px] md:h-[84px]" />
       <div className={`${wrap} py-24 space-y-6`}>
-        <div className="h-4 w-48 rounded bg-[#F0F2EE]" />
-        <div className="h-14 w-3/4 rounded bg-[#F0F2EE]" />
-        <div className="h-5 w-1/2 rounded bg-[#F0F2EE]" />
+        <div className="h-4 w-48 rounded bg-[#EAF0F0]" />
+        <div className="h-14 w-3/4 rounded bg-[#EAF0F0]" />
+        <div className="h-5 w-1/2 rounded bg-[#EAF0F0]" />
         <div className="grid md:grid-cols-2 gap-8 pt-12">
-          <div className="h-64 rounded-[14px] bg-white border border-[#DADDD7]" />
-          <div className="h-64 rounded-[14px] bg-white border border-[#DADDD7]" />
+          <div className="h-64 rounded-[14px] bg-white border border-[#D8E0E2]" />
+          <div className="h-64 rounded-[14px] bg-white border border-[#D8E0E2]" />
         </div>
       </div>
     </div>
