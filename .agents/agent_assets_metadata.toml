@@ -1,0 +1,30 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "Y_vokjff-A2DobVUyK2gK"
+uri = "file://.local/screenshots/gi-desktop-review.jpg"
+type = "image"
+title = "Desktop website review · 1440px"
+description = "Ivory-and-evergreen homepage with original logos and the two development products."
+logical_id = "3e10e7e8-0ae5-4fd8-9a5f-10f1db223c0b"
+content_hash = "sha256:3d73abadd3407b125d2f666e3a5d06caed71ec6cb7c3833666eb00b7a76fb371"
+size = 170643
+mtime_ms = 1795789374107
+storage_uri = "gcs://replit-rams-assets-worf/rams/assets/repl:17751259-28da-4521-97da-0e0ca89b9305/3e10e7e8-0ae5-4fd8-9a5f-10f1db223c0b/60beeb57-92ff-4504-9aee-fd3ccf456cea"
+storage_version_token = "1795789387125568"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "kuw36tFeseFoA99xggwpn"
+uri = "file://.local/screenshots/gi-mobile-review.jpg"
+type = "image"
+title = "Mobile website review · 390px"
+description = "Single-column responsive layout with original logos, readable cards and About section."
+logical_id = "1c588b58-3bab-4416-b1b4-50aa402b8974"
+content_hash = "sha256:3336fddbaeb7174ad283377f73b3467ea979cdd95dbe04c2624e1aea06396704"
+size = 139135
+mtime_ms = 1795789374122
+storage_uri = "gcs://replit-rams-assets-worf/rams/assets/repl:17751259-28da-4521-97da-0e0ca89b9305/1c588b58-3bab-4416-b1b4-50aa402b8974/bab0e629-b4d2-42eb-832f-ed1a548b6a08"
+storage_version_token = "1795789387556509"
+content_type = "image/jpeg"

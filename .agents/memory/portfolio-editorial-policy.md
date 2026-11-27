@@ -13,10 +13,18 @@ The owner identified the official Generational Intelligence emblem as a Triskeli
 
 **Why:** The owner explicitly required these particular supplied images, rather than generated or substitute branding.
 
-**How to apply:** Use neutral containment and proportional image sizing to adapt logos to the dark corporate website; keep original files and historic CMS records intact.
+**How to apply:** Use proportional image sizing and preserve original files and historic CMS records. For the ivory website, the owner explicitly approved evergreen backgrounds behind the white originals in the header and product logo panels.
+
+**Why evergreen containment:** The original artwork is predominantly white and would lose important marks against light backgrounds; the owner chose background containment rather than replacement or recolouring.
 
 The owner approved public links to both product websites while retaining “In Development” for both products.
 
 **Why:** Reachable product websites do not establish that either software product has launched or is commercially available.
 
 **How to apply:** Keep the development labels and purpose-qualified descriptions when maintaining these links; do not infer launch status from a successful website response.
+
+Company/About information should be small and unobtrusive at the very bottom of the footer, not a large standalone section in the middle of the homepage.
+
+**Why:** The owner said it “doesn't need to be this huge, big section” and asked for a little company information alongside the legal details.
+
+**How to apply:** Preserve the footer-only About placement and its compact presentation in future website revisions unless the owner explicitly changes direction.

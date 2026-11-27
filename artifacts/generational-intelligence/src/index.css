@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Manrope:wght@400;500;600;700&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @plugin "@tailwindcss/typography";
@@ -45,57 +45,38 @@
 }
 
 :root, .dark {
-  /* Restrained minimal dark aesthetic */
-  --background: 0 0% 5%;
-  --foreground: 0 0% 98%;
-  
-  --border: 0 0% 18%;
-  
-  --card: 0 0% 7%;
-  --card-foreground: 0 0% 98%;
-  --card-border: 0 0% 18%;
-  
-  --popover: 0 0% 7%;
-  --popover-foreground: 0 0% 98%;
-  --popover-border: 0 0% 18%;
-  
-  --primary: 0 0% 98%;
-  --primary-foreground: 0 0% 5%;
-  
-  --secondary: 0 0% 15%;
-  --secondary-foreground: 0 0% 98%;
-  
-  --muted: 0 0% 15%;
-  --muted-foreground: 0 0% 70%;
-  
-  --accent: 0 0% 15%;
-  --accent-foreground: 0 0% 98%;
-  
-  --destructive: 0 90% 72%;
-  --destructive-foreground: 0 0% 98%;
-  
-  --input: 0 0% 18%;
-  --ring: 0 0% 98%;
-  
-  --app-font-sans: 'DM Sans', sans-serif;
-  --app-font-mono: 'Space Mono', monospace;
-  --radius: 0rem;
-  
-  --button-outline: rgba(255, 255, 255, 0.1);
-  --badge-outline: rgba(255, 255, 255, 0.05);
-  --opaque-button-border-intensity: 9;
-  
-  --elevate-1: rgba(255, 255, 255, 0.04);
-  --elevate-2: rgba(255, 255, 255, 0.09);
-  
-  --shadow-2xs: 0px 1px 2px 0px rgba(0,0,0,0.4);
-  --shadow-xs: 0px 1px 2px 0px rgba(0,0,0,0.4);
-  --shadow-sm: 0px 2px 4px 0px rgba(0,0,0,0.4);
-  --shadow: 0px 4px 8px 0px rgba(0,0,0,0.4);
-  --shadow-md: 0px 8px 16px 0px rgba(0,0,0,0.4);
-  --shadow-lg: 0px 16px 32px 0px rgba(0,0,0,0.4);
-  --shadow-xl: 0px 24px 48px 0px rgba(0,0,0,0.4);
-  --shadow-2xl: 0px 32px 64px 0px rgba(0,0,0,0.4);
+  --background: 48 23.809523810% 95.882352941%;
+  --foreground: 206.666666667 16.363636364% 10.784313725%;
+  --border: 90 8.108108108% 85.490196078%;
+  --card: 0 0% 100%;
+  --card-foreground: 206.666666667 16.363636364% 10.784313725%;
+  --card-border: 90 8.108108108% 85.490196078%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 206.666666667 16.363636364% 10.784313725%;
+  --popover-border: 90 8.108108108% 85.490196078%;
+  --primary: 169.756097561 48.235294118% 16.666666667%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 90 13.333333333% 94.117647059%;
+  --secondary-foreground: 206.666666667 16.363636364% 10.784313725%;
+  --muted: 90 13.333333333% 94.117647059%;
+  --muted-foreground: 130 2.654867257% 44.313725490%;
+  --accent: 90 13.333333333% 94.117647059%;
+  --accent-foreground: 206.666666667 16.363636364% 10.784313725%;
+  --destructive: 206.666666667 16.363636364% 10.784313725%;
+  --destructive-foreground: 48 23.809523810% 95.882352941%;
+  --input: 90 8.108108108% 85.490196078%;
+  --ring: 169.756097561 48.235294118% 16.666666667%;
+  --app-font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  --app-font-display: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  --app-font-mono: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  --radius: 0.5rem;
+  --button-outline: rgba(23, 28, 32, 0.1);
+  --badge-outline: rgba(23, 28, 32, 0.06);
+  --opaque-button-border-intensity: -8;
+  --elevate-1: rgba(23, 28, 32, 0.03);
+  --elevate-2: rgba(23, 28, 32, 0.06);
+  --shadow-2xs: none; --shadow-xs: none; --shadow-sm: none; --shadow: none;
+  --shadow-md: none; --shadow-lg: none; --shadow-xl: none; --shadow-2xl: none;
 }
 
 @layer base {
@@ -121,9 +102,19 @@
 @layer base {
   html { scroll-behavior: smooth; overflow-x: clip; }
   body { overflow-x: clip; font-size: 1rem; line-height: 1.6; }
-  section[id] { scroll-margin-top: 88px; }
-  :focus-visible { outline: 2px solid hsl(var(--foreground)); outline-offset: 3px; }
+  @media (min-width: 768px) { body { font-size: 1.125rem; } }
+  h1, h2, h3 { font-family: var(--app-font-display); }
+  section[id] { scroll-margin-top: 84px; }
+  :focus-visible { outline: 2px solid #163F38; outline-offset: 3px; }
+  footer :focus-visible { outline-color: #F7F6F2; }
   ::selection { background: hsl(var(--foreground)); color: hsl(var(--background)); }
+}
+
+.destructive :focus-visible { outline-color: #F7F6F2; }
+.destructive [toast-close] {
+  color: #F7F6F2;
+  --tw-ring-color: #F7F6F2;
+  --tw-ring-offset-color: #171C20;
 }
 
 @media (prefers-reduced-motion: reduce) {

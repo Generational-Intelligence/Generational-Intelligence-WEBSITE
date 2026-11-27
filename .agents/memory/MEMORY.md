@@ -1,1 +1,1 @@
-- [Portfolio editorial policy](portfolio-editorial-policy.md) — Angaro spelling, pre-launch copy limits, and preservation of the owner's original logos and Triskelion identity.
+- [Portfolio editorial policy](portfolio-editorial-policy.md) — Approved copy, pre-launch status, original logos and Triskelion identity, and compact footer-only About placement.

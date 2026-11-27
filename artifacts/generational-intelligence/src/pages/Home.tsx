@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, ArrowRight, Menu, X, RotateCw } from 'lucide-react';
+import { ArrowRight, Menu, X, RotateCw } from 'lucide-react';
 import { CompanyBrand, triskelionLogo } from '@/components/company-brand';
 
 const formSchema = z.object({
@@ -35,16 +35,20 @@ const NAV = [
 ];
 
 const PRODUCT_WEBSITES: Record<string, { href: string; label: string }> = {
-  gatherwell: { href: 'https://gatherwell.ie', label: 'Visit GatherWell Website' },
-  angaro: { href: 'https://angaro.ie', label: 'Visit Angaro Website' },
+  gatherwell: { href: 'https://gatherwell.ie', label: 'Visit GatherWell website' },
+  angaro: { href: 'https://angaro.ie', label: 'Visit Angaro website' },
 };
 
 const LEGAL = {
   cro: '797252',
 };
 
-const wrap = 'w-full max-w-[1280px] mx-auto px-5 md:px-8';
-const label = 'font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground';
+const wrap = 'w-full max-w-[1160px] mx-auto px-5 md:px-7 lg:px-10';
+const sectionPad = 'py-14 md:py-16 lg:py-[88px]';
+const h2 = 'text-[30px] leading-[1.18] md:text-[38px] md:leading-[1.15] font-[650] tracking-[-0.015em] text-[#171C20]';
+const bodyText = 'text-base md:text-lg leading-[1.6]';
+const primaryBtn =
+  'inline-flex h-12 items-center justify-center gap-2 rounded-none bg-[#163F38] px-6 text-base font-semibold text-white hover:bg-[#102B27] transition-colors duration-150';
 
 export default function Home() {
   const { data: site, isLoading, isError, refetch, isFetching } = useGetPublicSite();
@@ -83,21 +87,22 @@ export default function Home() {
 
   if (isError || !site) {
     return (
-      <div className="min-h-[100dvh] flex items-center justify-center bg-background px-6">
-        <div role="alert" className="max-w-md border border-border bg-card p-8 text-left">
-          <img src={triskelionLogo} alt="Generational Intelligence Triskelion emblem" width={1600} height={1600} className="h-14 w-14 mb-6 object-contain" />
-          <p className={label}>Unavailable</p>
-          <h1 className="mt-3 text-2xl font-medium tracking-tight">This page could not be loaded</h1>
-          <p className="mt-3 text-base text-muted-foreground leading-relaxed">
+      <div className="min-h-[100dvh] flex items-center justify-center bg-[#F7F6F2] px-6">
+        <div role="alert" className="max-w-md rounded-[14px] border border-[#DADDD7] bg-white p-8 text-left">
+          <span className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-md bg-[#163F38]">
+            <img src={triskelionLogo} alt="Generational Intelligence Triskelion emblem" width={1600} height={1600} className="h-full w-full object-contain" />
+          </span>
+          <h1 className="text-2xl font-[650] tracking-tight text-[#171C20]">This page could not be loaded</h1>
+          <p className="mt-3 text-base text-[#6E746F] leading-relaxed">
             Please check your connection and try again in a moment.
           </p>
           <Button
             onClick={() => refetch()}
             disabled={isFetching}
             data-testid="button-retry"
-            className="mt-6 h-12 rounded-none px-6 font-mono text-xs uppercase tracking-[0.14em] gap-3"
+            className={`${primaryBtn} mt-6`}
           >
-            {isFetching ? <Loader2 className="h-4 w-4 animate-spin" /> : <RotateCw className="h-4 w-4" />}
+            <RotateCw aria-hidden="true" className="h-4 w-4" />
             Try again
           </Button>
         </div>
@@ -105,62 +110,58 @@ export default function Home() {
     );
   }
 
-  const year = new Date().getFullYear();
+  const projects = site.projects;
 
   return (
-    <div className="min-h-[100dvh] bg-background text-foreground flex flex-col font-sans overflow-x-clip">
+    <div className="min-h-[100dvh] bg-[#F7F6F2] text-[#171C20] flex flex-col font-sans overflow-x-clip">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:bg-foreground focus:text-background focus:px-4 focus:py-3 font-mono text-xs uppercase"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:rounded-md focus:bg-[#163F38] focus:text-white focus:px-4 focus:py-3 text-sm font-medium"
       >
         Skip to content
       </a>
 
       <SiteHeader companyName={site.companyName} />
 
-      <main id="main" tabIndex={-1} className="flex-1 scroll-mt-[88px]">
+      <main id="main" tabIndex={-1} className="flex-1 scroll-mt-[84px] focus:outline-none">
         {/* Hero */}
-        <section className="border-b border-border">
-          <div className={`${wrap} py-14 md:py-24`}>
-            <p className={`${label} flex items-center gap-3 mb-8`}>
-              <span aria-hidden="true" className="h-2 w-2 bg-foreground" />
-              Software development · Ireland
-            </p>
-            <h1
-              data-testid="text-tagline"
-              className="max-w-[720px] text-4xl md:text-[4rem] leading-[1.1] font-medium tracking-[-0.03em] text-balance"
-            >
-              {site.tagline}
-            </h1>
-            <div className="mt-6 max-w-[720px]">
-              <p
-                data-testid="text-description"
-                className="text-base md:text-xl text-muted-foreground leading-relaxed"
+        <section className="bg-[#F7F6F2]">
+          <div className={`${wrap} pt-16 pb-[72px] md:pt-16 md:pb-16 lg:pt-[104px] lg:pb-28`}>
+            <div className="max-w-[900px]">
+              <p className="text-sm font-medium leading-[1.3] text-[#163F38]">Independent software development · Ireland</p>
+              <h1
+                data-testid="text-tagline"
+                className="mt-5 text-[40px] leading-[1.12] md:text-[64px] md:leading-[1.08] font-[650] tracking-[-0.02em] text-balance"
               >
-                {site.description}
+                Software built around real-world needs.
+              </h1>
+              <p data-testid="text-description" className={`mt-6 max-w-[680px] ${bodyText}`}>
+                Generational Intelligence develops practical digital platforms that help businesses simplify operations, connect services and work with greater clarity.
               </p>
-              <div className="mt-6">
-                <a
-                  href="#software"
-                  data-testid="link-hero-software"
-                  className="inline-flex min-h-12 items-center gap-3 bg-foreground px-6 text-base font-medium text-background hover:bg-foreground/90 transition-colors duration-200"
-                >
+              <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
+                <a href="#software" data-testid="link-hero-software" className={primaryBtn}>
                   Explore our software <ArrowRight aria-hidden="true" className="h-4 w-4" />
                 </a>
+                <a
+                  href="#about"
+                  data-testid="link-hero-about"
+                  className="inline-flex h-12 items-center text-base font-semibold text-[#171C20] underline underline-offset-4 decoration-[#DADDD7] hover:decoration-[#163F38] transition-colors duration-150"
+                >
+                  About our company
+                </a>
               </div>
-              <p className="mt-6 text-base md:text-xl text-muted-foreground leading-relaxed">
-                Our products are developed around real-world challenges, with a focus on clarity, efficiency and useful technology.
-              </p>
             </div>
           </div>
         </section>
 
         {/* Software */}
-        <section id="software" aria-labelledby="software-heading" className="border-b border-border">
-          <div className={`${wrap} py-14 md:py-20`}>
-            <SectionHead index="01" id="software-heading" title="Our software" />
-            <ul className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-              {site.projects.map((project) => (
+        <section id="software" aria-labelledby="software-heading" className="bg-[#F0F2EE] border-y border-[#DADDD7]">
+          <div className={`${wrap} ${sectionPad}`}>
+            <SectionHead eyebrow="Our software" id="software-heading" title="Focused products. Practical purpose.">
+              Two platforms currently in development.
+            </SectionHead>
+            <ul className="mt-10 lg:mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+              {projects.map((project) => (
                 <li key={project.slug} className="flex">
                   <ProjectCard project={project} />
                 </li>
@@ -169,42 +170,19 @@ export default function Home() {
           </div>
         </section>
 
-        {/* About */}
-        <section id="about" aria-labelledby="about-heading" className="border-b border-border">
-          <div className={`${wrap} py-14 md:py-20 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12`}>
-            <div className="lg:col-span-5">
-              <SectionHead index="02" id="about-heading" title="About us" />
-            </div>
-            <div className="lg:col-span-7 space-y-8">
-              <p className="text-base md:text-lg leading-relaxed">
-                Generational Intelligence develops software around practical problems experienced by businesses and the people running them. Our approach begins with understanding how work actually happens, identifying unnecessary complexity and designing technology that helps people operate with greater clarity and control.
-              </p>
-              <p className="text-base text-muted-foreground">{site.companyName} is a private limited company registered in Ireland.</p>
-              <dl className="grid grid-cols-1 md:grid-cols-2 border-t border-l border-border">
-                <Fact term="Legal entity" value={site.companyName} />
-                <Fact term="Company number" value={`CRO ${LEGAL.cro}`} />
-                <Fact term="Activity" value="Software development" />
-                <Fact term="Registered in" value="Ireland" />
-              </dl>
-            </div>
-          </div>
-        </section>
-
         {/* Contact */}
-        <section id="contact" aria-labelledby="contact-heading">
-          <div className={`${wrap} py-14 md:py-20 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12`}>
-            <div className="lg:col-span-4">
-              <SectionHead index="03" id="contact-heading" title="Let’s discuss what you’re building.">
-                For business enquiries, potential partnerships and product pilot interest, get in touch with our team.
-              </SectionHead>
-            </div>
-            <div className="lg:col-span-8">
+        <section id="contact" aria-labelledby="contact-heading" className="bg-[#F0F2EE] border-t border-[#DADDD7]">
+          <div className={`${wrap} ${sectionPad} grid grid-cols-1 lg:grid-cols-[40fr_60fr] items-start gap-8 lg:gap-14`}>
+            <SectionHead id="contact-heading" title="Start a conversation.">
+              For business enquiries, partnerships or interest in our developing platforms, send us a message.
+            </SectionHead>
+            <div>
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
                   noValidate
                   aria-busy={submitQuery.isPending}
-                  className="border border-border bg-card p-6 md:p-8 space-y-6"
+                  className="rounded-[14px] border border-[#DADDD7] bg-white p-6 lg:p-8 space-y-6"
                 >
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
@@ -240,7 +218,7 @@ export default function Home() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className={fieldLabel}>
-                          Company <span className="normal-case tracking-normal text-muted-foreground">(optional)</span>
+                          Company <span className="font-normal">(optional)</span>
                         </FormLabel>
                         <FormControl>
                           <Input autoComplete="organization" data-testid="input-company" className={fieldInput} {...field} />
@@ -259,7 +237,7 @@ export default function Home() {
                           <Textarea
                             data-testid="input-message"
                             placeholder="Tell us briefly what you would like to discuss."
-                            className={`${fieldInput} min-h-[160px] py-3 resize-y`}
+                            className={`${fieldInput} min-h-[148px] py-3 resize-y`}
                             {...field}
                           />
                         </FormControl>
@@ -268,19 +246,15 @@ export default function Home() {
                     )}
                   />
                   <div className="pt-2 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
-                    <p className="text-sm text-muted-foreground">Your enquiry is sent privately to our team.</p>
+                    <p className="text-[15px] leading-[1.55] text-[#6E746F]">Your enquiry is sent privately to our team.</p>
                     <Button
                       type="submit"
                       disabled={submitQuery.isPending}
                       data-testid="button-submit"
-                      className="h-12 w-full sm:w-auto rounded-none px-8 font-mono text-xs uppercase tracking-[0.14em] gap-3"
+                      className={`${primaryBtn} w-full sm:w-auto`}
                     >
                       {submitQuery.isPending ? 'Sending…' : 'Send enquiry'}
-                      {submitQuery.isPending ? (
-                        <Loader2 aria-hidden="true" className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <ArrowRight aria-hidden="true" className="h-4 w-4" />
-                      )}
+                      {!submitQuery.isPending && <ArrowRight aria-hidden="true" className="h-4 w-4" />}
                     </Button>
                   </div>
                 </form>
@@ -290,47 +264,46 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="border-t border-border bg-card">
-        <div className={`${wrap} py-12 md:py-16 grid grid-cols-1 md:grid-cols-12 gap-10`}>
-          <div className="md:col-span-5 space-y-4">
-            <CompanyBrand />
-            <p className="text-base text-muted-foreground max-w-sm">{site.tagline}</p>
+      <footer className="bg-[#102B27] text-[#F7F6F2]">
+        <div className={`${wrap} py-12 md:py-14 grid grid-cols-1 md:grid-cols-3 gap-10`}>
+          <div>
+            <CompanyBrand tone="dark" />
           </div>
-          <nav aria-label="Footer" className="md:col-span-2">
-            <p className={`${label} mb-4`}>Sections</p>
+          <nav aria-label="Our Software">
+            <p className="text-sm font-semibold mb-3">Our Software</p>
             <ul>
-              {NAV.map((n) => (
+              {projects.map((project) => {
+                const website = PRODUCT_WEBSITES[project.slug];
+                return website ? (
+                  <li key={project.slug}>
+                    <a href={website.href} target="_blank" rel="noopener noreferrer" data-testid={`link-footer-${project.slug}`} className={footerLink}>
+                      {project.name}
+                    </a>
+                  </li>
+                ) : null;
+              })}
+            </ul>
+          </nav>
+          <nav aria-label="Company">
+            <p className="text-sm font-semibold mb-3">Company</p>
+            <ul>
+              {NAV.filter((n) => n.id !== 'software').map((n) => (
                 <li key={n.id}>
-                  <a href={`#${n.id}`} data-testid={`link-footer-${n.id}`} className="inline-flex min-h-11 items-center text-base hover:underline underline-offset-4">
+                  <a href={`#${n.id}`} data-testid={`link-footer-${n.id}`} className={footerLink}>
                     {n.label}
                   </a>
                 </li>
               ))}
             </ul>
           </nav>
-          <div className="md:col-span-5 space-y-2 text-sm text-muted-foreground leading-relaxed">
-            <p className={`${label} mb-4`}>Company information</p>
-            <p className="text-foreground">{site.companyName}</p>
-            <p>Registered in Ireland · CRO {LEGAL.cro}</p>
-            <p>Business activity: Software development</p>
-            <ul className="pt-4">
-              {site.projects.map((project) => {
-                const website = PRODUCT_WEBSITES[project.slug];
-                return website ? (
-                  <li key={project.slug}>
-                    <a href={website.href} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center text-foreground underline underline-offset-4 hover:text-muted-foreground transition-colors duration-200">
-                      {website.label}
-                    </a>
-                  </li>
-                ) : null;
-              })}
-            </ul>
-          </div>
         </div>
-        <div className="border-t border-border">
-          <div className={`${wrap} py-6 flex flex-col sm:flex-row justify-between gap-2 font-mono text-xs text-muted-foreground`}>
-            <p>&copy; {year} {site.companyName}</p>
-            <a href="#main" className="hover:text-foreground">Back to top</a>
+        <div id="about" aria-labelledby="footer-about-heading" className="scroll-mt-[84px] border-t border-[#F7F6F2]/20">
+          <div className={`${wrap} py-6`}>
+            <h2 id="footer-about-heading" className="text-sm font-semibold leading-[1.55]">About Generational Intelligence</h2>
+            <p className="mt-2 max-w-[720px] text-sm leading-[1.6]">
+              Generational Intelligence Limited is an Irish software development company building practical digital products for real-world needs.
+            </p>
+            <p data-testid="text-legal" className="mt-2 text-[13px] leading-[1.5]">{site.companyName} · CRO {LEGAL.cro}</p>
           </div>
         </div>
       </footer>
@@ -338,10 +311,12 @@ export default function Home() {
   );
 }
 
-const fieldLabel = 'font-mono text-xs uppercase tracking-[0.14em] text-foreground';
+const footerLink =
+  'inline-flex min-h-11 items-center text-[15px] text-[#F7F6F2] underline-offset-4 hover:underline transition-colors duration-150';
+const fieldLabel = 'text-sm font-semibold text-[#171C20]';
 const fieldInput =
-  'h-12 rounded-none border border-border bg-background px-4 text-base placeholder:text-muted-foreground/70 focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-0 focus-visible:border-foreground aria-[invalid=true]:border-destructive';
-const fieldError = 'text-sm font-medium text-destructive';
+  'h-12 rounded-none border border-[#6E746F] bg-white px-4 text-base text-[#171C20] placeholder:text-[#6E746F] focus-visible:ring-2 focus-visible:ring-[#163F38] focus-visible:ring-offset-0 focus-visible:border-[#163F38] aria-[invalid=true]:border-[#171C20] aria-[invalid=true]:border-2';
+const fieldError = 'text-sm font-medium text-[#171C20]';
 
 function SiteHeader({ companyName }: { companyName: string }) {
   const [open, setOpen] = useState(false);
@@ -354,19 +329,19 @@ function SiteHeader({ companyName }: { companyName: string }) {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
-      <div className={`${wrap} h-[72px] flex items-center justify-between gap-6`}>
-        <a href="#main" aria-label={`${companyName} home`} className="flex items-center min-w-0" data-testid="link-home">
+    <header className="sticky top-0 z-50 border-b border-[#DADDD7] bg-[#F7F6F2]">
+      <div className={`${wrap} h-[71px] md:h-[83px] flex items-center justify-between gap-6`}>
+        <a href="#main" aria-label={`${companyName} home`} className="flex items-center min-w-0 rounded-md" data-testid="link-home">
           <CompanyBrand />
         </a>
         <nav aria-label="Primary" className="hidden md:block">
-          <ul className="flex items-center gap-1">
+          <ul className="flex items-center gap-8">
             {NAV.map((n) => (
               <li key={n.id}>
                 <a
                   href={`#${n.id}`}
                   data-testid={`link-nav-${n.id}`}
-                  className="inline-flex h-11 items-center px-4 text-base text-foreground hover:text-muted-foreground transition-colors duration-200"
+                  className="inline-flex h-11 items-center text-sm leading-[1.3] font-medium text-[#171C20] hover:text-[#163F38] hover:underline underline-offset-4 transition-colors duration-150"
                 >
                   {n.label}
                 </a>
@@ -376,7 +351,7 @@ function SiteHeader({ companyName }: { companyName: string }) {
         </nav>
         <button
           type="button"
-          className="md:hidden inline-flex h-11 w-11 items-center justify-center border border-border"
+          className="md:hidden inline-flex h-11 w-11 items-center justify-center rounded-lg border border-[#DADDD7] text-[#171C20]"
           aria-expanded={open}
           aria-controls="mobile-nav"
           aria-label={open ? 'Close menu' : 'Open menu'}
@@ -387,17 +362,17 @@ function SiteHeader({ companyName }: { companyName: string }) {
         </button>
       </div>
       {open && (
-        <nav id="mobile-nav" aria-label="Mobile" className="md:hidden border-t border-border bg-background">
+        <nav id="mobile-nav" aria-label="Mobile" className="md:hidden border-t border-[#DADDD7] bg-[#F7F6F2]">
           <ul className={`${wrap} py-2`}>
             {NAV.map((n) => (
-              <li key={n.id} className="border-b border-border last:border-0">
+              <li key={n.id} className="border-b border-[#DADDD7] last:border-0">
                 <a
                   href={`#${n.id}`}
                   onClick={() => setOpen(false)}
                   data-testid={`link-mobile-${n.id}`}
-                  className="flex h-14 items-center justify-between text-base"
+                  className="flex h-14 items-center justify-between text-base font-medium"
                 >
-                  {n.label} <ArrowRight aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
+                  {n.label} <ArrowRight aria-hidden="true" className="h-4 w-4 text-[#163F38]" />
                 </a>
               </li>
             ))}
@@ -409,32 +384,23 @@ function SiteHeader({ companyName }: { companyName: string }) {
 }
 
 function SectionHead({
-  index,
+  eyebrow,
   id,
   title,
   children,
 }: {
-  index: string;
+  eyebrow?: string;
   id: string;
   title: string;
   children?: ReactNode;
 }) {
   return (
     <div className="max-w-2xl">
-      <p className={`${label} mb-4`}>{index} /</p>
-      <h2 id={id} className="text-3xl md:text-4xl font-medium tracking-tight">
+      {eyebrow && <p className="mb-3 text-sm font-medium leading-[1.3] text-[#163F38]">{eyebrow}</p>}
+      <h2 id={id} className={h2}>
         {title}
       </h2>
-      {children && <p className="mt-4 text-base md:text-lg text-muted-foreground leading-relaxed">{children}</p>}
-    </div>
-  );
-}
-
-function Fact({ term, value }: { term: string; value: string }) {
-  return (
-    <div className="border-r border-b border-border p-5">
-      <dt className={label}>{term}</dt>
-      <dd className="mt-2 text-base">{value}</dd>
+      {children && <p className={`mt-4 ${bodyText} text-[#171C20]`}>{children}</p>}
     </div>
   );
 }
@@ -448,20 +414,10 @@ function ProjectCard({
   return (
     <article
       data-testid={`card-project-${project.slug}`}
-      className="flex w-full flex-col border border-border bg-card p-6 md:p-8 hover:border-muted-foreground/60 transition-colors duration-200"
+      className="flex w-full flex-col rounded-[14px] border border-[#DADDD7] bg-white p-6 lg:p-8 md:min-h-[455px]"
     >
-      <div className="flex flex-col items-start gap-3">
-        <span className="min-h-10 text-sm leading-5 text-muted-foreground">{project.category}</span>
-        <span
-          data-testid={`status-project-${project.slug}`}
-          className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap border border-foreground/40 px-3 py-1.5 font-mono text-xs uppercase tracking-[0.1em]"
-        >
-          <span aria-hidden="true" className="h-1.5 w-1.5 bg-foreground" />
-          {project.status}
-        </span>
-      </div>
       {project.logoPath && (
-        <div className="mt-6 flex h-40 items-center justify-center border border-border bg-black px-6">
+        <div className="flex h-[168px] w-full items-center justify-center bg-[#163F38] px-6">
           <img
             src={`${import.meta.env.BASE_URL}${project.logoPath.replace(/^\//, '')}`}
             alt={`${project.name} official logo`}
@@ -472,12 +428,27 @@ function ProjectCard({
           />
         </div>
       )}
-      <h3 className="mt-6 text-3xl md:text-4xl font-medium tracking-[-0.02em]">{project.name}</h3>
-      <p className="mt-4 text-base md:text-lg text-muted-foreground leading-relaxed">{project.description}</p>
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+        <h3 className="text-[28px] leading-[1.2] font-[650] tracking-[-0.015em]">{project.name}</h3>
+        <span
+          data-testid={`status-project-${project.slug}`}
+          className="inline-flex shrink-0 items-center whitespace-nowrap rounded-md border border-[#DADDD7] px-2.5 py-1 text-sm font-medium text-[#171C20]"
+        >
+          {project.status}
+        </span>
+      </div>
+      <p className="mt-1 text-sm text-[#6E746F]">{project.category}</p>
+      <p className="mt-4 text-base md:text-lg leading-[1.6]">{project.description}</p>
       {website && (
         <div className="mt-auto pt-6">
-          <a href={website.href} target="_blank" rel="noopener noreferrer" data-testid={`link-project-${project.slug}`} className="inline-flex min-h-11 items-center text-base text-foreground underline underline-offset-4 hover:text-muted-foreground transition-colors duration-200">
-            {website.label}
+          <a
+            href={website.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-testid={`link-project-${project.slug}`}
+            className="inline-flex min-h-11 items-center gap-2 text-base font-semibold text-[#163F38] underline-offset-4 hover:underline transition-colors duration-150"
+          >
+            {website.label} <ArrowRight aria-hidden="true" className="h-4 w-4" />
           </a>
         </div>
       )}
@@ -487,16 +458,16 @@ function ProjectCard({
 
 function LoadingState() {
   return (
-    <div className="min-h-[100dvh] bg-background" aria-busy="true" aria-live="polite">
+    <div className="min-h-[100dvh] bg-[#F7F6F2]" aria-busy="true" aria-live="polite">
       <span className="sr-only">Loading</span>
-      <div className="border-b border-border h-[72px]" />
-      <div className={`${wrap} py-24 space-y-6 animate-pulse`}>
-        <div className="h-3 w-48 bg-muted" />
-        <div className="h-14 w-3/4 bg-muted" />
-        <div className="h-5 w-1/2 bg-muted" />
+      <div className="border-b border-[#DADDD7] h-[72px] md:h-[84px]" />
+      <div className={`${wrap} py-24 space-y-6`}>
+        <div className="h-4 w-48 rounded bg-[#F0F2EE]" />
+        <div className="h-14 w-3/4 rounded bg-[#F0F2EE]" />
+        <div className="h-5 w-1/2 rounded bg-[#F0F2EE]" />
         <div className="grid md:grid-cols-2 gap-8 pt-12">
-          <div className="h-64 bg-card border border-border" />
-          <div className="h-64 bg-card border border-border" />
+          <div className="h-64 rounded-[14px] bg-white border border-[#DADDD7]" />
+          <div className="h-64 rounded-[14px] bg-white border border-[#DADDD7]" />
         </div>
       </div>
     </div>
