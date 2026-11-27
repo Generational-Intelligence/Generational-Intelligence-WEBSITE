@@ -47,9 +47,9 @@ const approvedSnapshotPath = fileURLToPath(
 
 const companyCopy = {
   companyName: "Generational Intelligence Limited",
-  tagline: "Practical software for complex, real-world work.",
+  tagline: "Practical software for real-world operations",
   description:
-    "Generational Intelligence Limited is an Irish software development company. We develop practical software designed around how people work, decide and collaborate.",
+    "Generational Intelligence Limited is an Irish software development company creating practical digital platforms for workplace services and delivery operations.",
 };
 
 function projectPayload(project: typeof projects.$inferSelect) {

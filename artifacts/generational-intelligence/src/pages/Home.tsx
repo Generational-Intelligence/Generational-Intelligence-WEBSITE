@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
 import { useGetPublicSite, useSubmitQuery } from '@workspace/api-client-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,278 +16,460 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, ArrowRight, CornerDownRight } from 'lucide-react';
+import { Loader2, ArrowRight, Menu, X, RotateCw } from 'lucide-react';
 import LogoWhite from '@assets/1_1789327486254.png';
 import LogoMarkWhite from '@assets/1_1789327474600.png';
 
 const formSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters.'),
+  name: z.string().min(2, 'Please enter your name (at least 2 characters).'),
   email: z.string().email('Please enter a valid email address.'),
   company: z.string().optional(),
-  message: z.string().min(10, 'Message must be at least 10 characters.'),
+  message: z.string().min(10, 'Please write a message of at least 10 characters.'),
 });
 
+type FormValues = z.infer<typeof formSchema>;
+
+const NAV = [
+  { id: 'about', label: 'About' },
+  { id: 'software', label: 'Software' },
+  { id: 'contact', label: 'Contact' },
+];
+
+const LEGAL = {
+  cro: '797252',
+};
+
+const wrap = 'w-full max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16';
+const label = 'font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground';
+
 export default function Home() {
-  const { data: site, isLoading, isError } = useGetPublicSite();
+  const { data: site, isLoading, isError, refetch, isFetching } = useGetPublicSite();
   const { toast } = useToast();
-  
   const submitQuery = useSubmitQuery();
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: '',
-      email: '',
-      company: '',
-      message: '',
-    },
+    defaultValues: { name: '', email: '', company: '', message: '' },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: FormValues) {
+    if (submitQuery.isPending) return;
     submitQuery.mutate(
       { data: values },
       {
         onSuccess: () => {
           toast({
-            title: 'Query Received',
-            description: 'Your message has been securely routed to our team.',
+            title: 'Enquiry sent',
+            description: 'Thank you. We have received your message and will reply by email.',
           });
           form.reset();
         },
         onError: () => {
           toast({
             variant: 'destructive',
-            title: 'Transmission Failed',
-            description: 'There was an error routing your query. Please try again.',
+            title: 'Your enquiry was not sent',
+            description: 'Something went wrong on our side. Your message is still in the form, so please try again.',
           });
         },
-      }
+      },
     );
   }
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-      </div>
-    );
-  }
+  if (isLoading) return <LoadingState />;
 
   if (isError || !site) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
-        <div className="text-center font-mono text-sm animate-in fade-in duration-500">
-          <p className="uppercase tracking-widest mb-2">[ SYSTEM OFFLINE ]</p>
-          <p className="text-muted-foreground">Unable to establish connection to origin.</p>
+      <div className="min-h-[100dvh] flex items-center justify-center bg-background px-6">
+        <div role="alert" className="max-w-md border border-border bg-card p-8 text-left">
+          <img src={LogoMarkWhite} alt="" className="h-8 w-8 mb-6 opacity-80" />
+          <p className={label}>Unavailable</p>
+          <h1 className="mt-3 text-2xl font-medium tracking-tight">This page could not be loaded</h1>
+          <p className="mt-3 text-base text-muted-foreground leading-relaxed">
+            Please check your connection and try again in a moment.
+          </p>
+          <Button
+            onClick={() => refetch()}
+            disabled={isFetching}
+            data-testid="button-retry"
+            className="mt-6 h-12 rounded-none px-6 font-mono text-xs uppercase tracking-[0.14em] gap-3"
+          >
+            {isFetching ? <Loader2 className="h-4 w-4 animate-spin" /> : <RotateCw className="h-4 w-4" />}
+            Try again
+          </Button>
         </div>
       </div>
     );
   }
 
-  const deployedProjects = site.projects.filter(p => p.status.toLowerCase() === 'published' || p.status.toLowerCase() === 'deployed');
-  const devProjects = site.projects.filter(p => p.status.toLowerCase() !== 'published' && p.status.toLowerCase() !== 'deployed');
+  const year = new Date().getFullYear();
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-foreground selection:text-background flex flex-col font-sans">
-      <header className="px-6 py-12 md:px-16 flex justify-between items-start">
-        <div className="flex min-w-0 items-center gap-4 md:gap-6">
-          <img src={LogoWhite} alt={site.companyName} className="h-10 md:h-16 w-auto object-contain" />
-          <span className="hidden md:block max-w-[260px] font-mono text-xs uppercase tracking-[0.15em] text-muted-foreground">
-            {site.companyName}
-          </span>
-        </div>
-        <div className="font-mono text-[10px] md:text-xs text-muted-foreground uppercase tracking-widest text-right">
-          <div>Studio</div>
-          <div>[ Operational ]</div>
-        </div>
-      </header>
+    <div className="min-h-[100dvh] bg-background text-foreground flex flex-col font-sans overflow-x-clip">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:bg-foreground focus:text-background focus:px-4 focus:py-3 font-mono text-xs uppercase"
+      >
+        Skip to content
+      </a>
 
-      <main className="flex-1 w-full max-w-[1400px] mx-auto px-6 md:px-16">
-        <section className="py-24 md:py-40 max-w-4xl animate-in fade-in slide-in-from-bottom-8 duration-700">
-          <p className="font-mono text-xs text-muted-foreground mb-8 uppercase tracking-widest flex items-center gap-3">
-            <span className="w-1.5 h-1.5 bg-primary block"></span>
-            Software Development
-          </p>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-medium tracking-tight leading-[1.1] mb-10">
-            {site.tagline}
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl font-light">
-            {site.description}
-          </p>
-        </section>
+      <SiteHeader companyName={site.companyName} />
 
-        <div className="h-[1px] w-full bg-border my-8 md:my-16" />
-
-        <section className="py-16 md:py-24 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
-          <div className="lg:col-span-3">
-            <h2 className="font-mono text-xs uppercase tracking-widest text-muted-foreground sticky top-12">
-              [ Approved Software ]
-            </h2>
-          </div>
-          
-          <div className="lg:col-span-9 space-y-24">
-            {deployedProjects.length > 0 && (
-              <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-150 fill-mode-both">
-                <h3 className="font-mono text-sm mb-12 text-primary flex items-center gap-4">
-                  <span>01</span>
-                  <div className="h-[1px] flex-1 bg-border" />
-                  <span className="uppercase tracking-widest">Deployed Systems</span>
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
-                  {deployedProjects.map(project => (
-                    <ProjectCard key={project.slug} project={project} />
-                  ))}
-                </div>
+      <main id="main" tabIndex={-1} className="flex-1 scroll-mt-[88px]">
+        {/* Hero */}
+        <section className="border-b border-border">
+          <div className={`${wrap} pt-16 pb-16 md:pt-24 md:pb-24`}>
+            <p className={`${label} flex items-center gap-3 mb-8`}>
+              <span aria-hidden="true" className="h-2 w-2 bg-foreground" />
+              Software development · Ireland
+            </p>
+            <h1
+              data-testid="text-tagline"
+              className="max-w-5xl text-[2.5rem] leading-[1.05] sm:text-6xl lg:text-[5.25rem] font-medium tracking-[-0.03em] text-balance"
+            >
+              {site.tagline}
+            </h1>
+            <div className="mt-10 md:mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+              <p
+                data-testid="text-description"
+                className="lg:col-span-7 text-lg md:text-xl text-muted-foreground leading-relaxed"
+              >
+                {site.description}
+              </p>
+              <div className="lg:col-span-5 flex flex-wrap gap-3 lg:justify-end">
+                <a
+                  href="#software"
+                  data-testid="link-hero-software"
+                  className="inline-flex h-12 items-center gap-3 bg-foreground px-6 font-mono text-xs uppercase tracking-[0.14em] text-background hover:bg-foreground/90 transition-colors"
+                >
+                  View our software <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                </a>
+                <a
+                  href="#contact"
+                  data-testid="link-hero-contact"
+                  className="inline-flex h-12 items-center border border-border px-6 font-mono text-xs uppercase tracking-[0.14em] hover:border-foreground transition-colors"
+                >
+                  Contact us
+                </a>
               </div>
-            )}
-
-            {devProjects.length > 0 && (
-              <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300 fill-mode-both">
-                <h3 className="font-mono text-sm mb-12 text-muted-foreground flex items-center gap-4">
-                  <span>{deployedProjects.length > 0 ? '02' : '01'}</span>
-                  <div className="h-[1px] flex-1 bg-border" />
-                  <span className="uppercase tracking-widest">In Development</span>
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
-                  {devProjects.map(project => (
-                    <ProjectCard key={project.slug} project={project} muted />
-                  ))}
-                </div>
-              </div>
-            )}
+            </div>
           </div>
         </section>
 
-        <div className="h-[1px] w-full bg-border my-8 md:my-16" />
-
-        <section className="py-16 md:py-32 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 mb-16">
-          <div className="lg:col-span-3">
-            <h2 className="font-mono text-xs uppercase tracking-widest text-muted-foreground sticky top-12">
-              [ Submit a Query ]
-            </h2>
+        {/* Software */}
+        <section id="software" aria-labelledby="software-heading" className="border-b border-border">
+          <div className={`${wrap} py-16 md:py-24`}>
+            <SectionHead index="01" id="software-heading" title="Software in development">
+              Two operational platforms, currently in development ahead of pilot use.
+            </SectionHead>
+            <ul className="mt-10 md:mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+              {site.projects.map((project, i) => (
+                <li key={project.slug} className="flex">
+                  <ProjectCard project={project} index={i + 1} />
+                </li>
+              ))}
+            </ul>
           </div>
-          
-          <div className="lg:col-span-6 lg:col-start-5">
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        </section>
+
+        {/* About */}
+        <section id="about" aria-labelledby="about-heading" className="border-b border-border">
+          <div className={`${wrap} py-16 md:py-24 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16`}>
+            <div className="lg:col-span-5">
+              <SectionHead index="02" id="about-heading" title="About us" />
+            </div>
+            <div className="lg:col-span-7 space-y-8">
+              <p className="text-lg md:text-xl leading-relaxed">
+                {site.companyName} is a private limited company registered in Ireland. We design and
+                build software for workplace services and delivery operations.
+              </p>
+              <dl className="grid grid-cols-1 sm:grid-cols-2 border-t border-l border-border">
+                <Fact term="Legal entity" value={site.companyName} />
+                <Fact term="Company number" value={`CRO ${LEGAL.cro}`} />
+                <Fact term="Activity" value="Software development" />
+                <Fact term="Registered in" value="Ireland" />
+              </dl>
+            </div>
+          </div>
+        </section>
+
+        {/* Contact */}
+        <section id="contact" aria-labelledby="contact-heading">
+          <div className={`${wrap} py-16 md:py-24 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16`}>
+            <div className="lg:col-span-4">
+              <SectionHead index="03" id="contact-heading" title="Contact us">
+                For business enquiries, partnerships or pilot interest, send us a short note and we will reply by email.
+              </SectionHead>
+            </div>
+            <div className="lg:col-span-8">
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  noValidate
+                  aria-busy={submitQuery.isPending}
+                  className="border border-border bg-card p-6 md:p-10 space-y-6"
+                >
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className={fieldLabel}>Name</FormLabel>
+                          <FormControl>
+                            <Input autoComplete="name" data-testid="input-name" className={fieldInput} {...field} />
+                          </FormControl>
+                          <FormMessage className={fieldError} />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className={fieldLabel}>Email</FormLabel>
+                          <FormControl>
+                            <Input type="email" autoComplete="email" data-testid="input-email" className={fieldInput} {...field} />
+                          </FormControl>
+                          <FormMessage className={fieldError} />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                   <FormField
                     control={form.control}
-                    name="name"
+                    name="company"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Name</FormLabel>
+                        <FormLabel className={fieldLabel}>
+                          Company <span className="normal-case tracking-normal text-muted-foreground">(optional)</span>
+                        </FormLabel>
                         <FormControl>
-                          <Input className="bg-transparent border-0 border-b border-border rounded-none px-0 focus-visible:ring-0 focus-visible:border-primary transition-colors text-base" placeholder="Enter your name" {...field} />
+                          <Input autoComplete="organization" data-testid="input-company" className={fieldInput} {...field} />
                         </FormControl>
-                        <FormMessage className="text-destructive font-mono text-[10px] uppercase tracking-wider" />
+                        <FormMessage className={fieldError} />
                       </FormItem>
                     )}
                   />
                   <FormField
                     control={form.control}
-                    name="email"
+                    name="message"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Email</FormLabel>
+                        <FormLabel className={fieldLabel}>Message</FormLabel>
                         <FormControl>
-                          <Input className="bg-transparent border-0 border-b border-border rounded-none px-0 focus-visible:ring-0 focus-visible:border-primary transition-colors text-base" placeholder="address@domain.com" {...field} />
+                          <Textarea
+                            data-testid="input-message"
+                            placeholder="Tell us briefly what you would like to discuss."
+                            className={`${fieldInput} min-h-[160px] py-3 resize-y`}
+                            {...field}
+                          />
                         </FormControl>
-                        <FormMessage className="text-destructive font-mono text-[10px] uppercase tracking-wider" />
+                        <FormMessage className={fieldError} />
                       </FormItem>
                     )}
                   />
-                </div>
-                
-                <FormField
-                  control={form.control}
-                  name="company"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Company (Optional)</FormLabel>
-                      <FormControl>
-                        <Input className="bg-transparent border-0 border-b border-border rounded-none px-0 focus-visible:ring-0 focus-visible:border-primary transition-colors text-base" placeholder="Organization name" {...field} />
-                      </FormControl>
-                      <FormMessage className="text-destructive font-mono text-[10px] uppercase tracking-wider" />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="message"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Message</FormLabel>
-                      <FormControl>
-                        <Textarea 
-                          className="bg-transparent border-0 border-b border-border rounded-none px-0 focus-visible:ring-0 focus-visible:border-primary transition-colors text-base resize-none min-h-[160px] py-4" 
-                          placeholder="Detail your operational requirements..." 
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage className="text-destructive font-mono text-[10px] uppercase tracking-wider" />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="pt-8">
-                  <Button 
-                    type="submit" 
-                    disabled={submitQuery.isPending}
-                    className="w-full sm:w-auto rounded-none font-mono uppercase tracking-widest text-xs h-14 px-10 bg-primary text-primary-foreground hover:bg-primary/90 transition-all group flex items-center justify-center gap-4 border border-primary hover:border-primary"
-                  >
-                    {submitQuery.isPending ? 'Transmitting...' : 'Initiate Query'}
-                    {submitQuery.isPending ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                    )}
-                  </Button>
-                </div>
-              </form>
-            </Form>
+                  <div className="pt-2 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
+                    <p className="text-sm text-muted-foreground">Your enquiry is sent privately to our team.</p>
+                    <Button
+                      type="submit"
+                      disabled={submitQuery.isPending}
+                      data-testid="button-submit"
+                      className="h-12 w-full sm:w-auto rounded-none px-8 font-mono text-xs uppercase tracking-[0.14em] gap-3"
+                    >
+                      {submitQuery.isPending ? 'Sending…' : 'Send enquiry'}
+                      {submitQuery.isPending ? (
+                        <Loader2 aria-hidden="true" className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            </div>
           </div>
         </section>
       </main>
 
-      <footer className="px-6 py-12 md:px-16 border-t border-border flex flex-col lg:flex-row justify-between items-start gap-6 text-xs font-mono text-muted-foreground">
-        <div className="flex min-w-0 items-start gap-4">
-          <img src={LogoMarkWhite} alt="" className="h-5 w-5 shrink-0 opacity-60" />
-          <div className="max-w-2xl space-y-3 leading-relaxed">
-            <p className="uppercase tracking-widest">&copy; {new Date().getFullYear()} {site.companyName}</p>
-            <p>Registered in Ireland · Company registration (CRO) number: 797252</p>
-            <p>Registered office: 81 Edgeworth Court, Longwood, Co. Meath, A83 F402, Ireland</p>
+      <footer className="border-t border-border bg-card">
+        <div className={`${wrap} py-12 md:py-16 grid grid-cols-1 md:grid-cols-12 gap-10`}>
+          <div className="md:col-span-5 space-y-4">
+            <img src={LogoWhite} alt={site.companyName} className="h-10 w-auto" />
+            <p className="text-base text-muted-foreground max-w-sm">{site.tagline}</p>
+          </div>
+          <nav aria-label="Footer" className="md:col-span-2">
+            <p className={`${label} mb-4`}>Sections</p>
+            <ul>
+              {NAV.map((n) => (
+                <li key={n.id}>
+                  <a href={`#${n.id}`} data-testid={`link-footer-${n.id}`} className="inline-flex min-h-11 items-center text-base hover:underline underline-offset-4">
+                    {n.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <div className="md:col-span-5 space-y-2 text-sm text-muted-foreground leading-relaxed">
+            <p className={`${label} mb-4`}>Company information</p>
+            <p className="text-foreground">{site.companyName}</p>
+            <p>Registered in Ireland · CRO {LEGAL.cro}</p>
             <p>Business activity: Software development</p>
           </div>
         </div>
-        <div className="shrink-0 uppercase tracking-widest">
-          Discreet Software & Systems
+        <div className="border-t border-border">
+          <div className={`${wrap} py-6 flex flex-col sm:flex-row justify-between gap-2 font-mono text-xs text-muted-foreground`}>
+            <p>&copy; {year} {site.companyName}</p>
+            <a href="#main" className="hover:text-foreground">Back to top</a>
+          </div>
         </div>
       </footer>
     </div>
   );
 }
 
-function ProjectCard({ project, muted = false }: { project: any, muted?: boolean }) {
+const fieldLabel = 'font-mono text-xs uppercase tracking-[0.14em] text-foreground';
+const fieldInput =
+  'h-12 rounded-none border border-border bg-background px-4 text-base placeholder:text-muted-foreground/70 focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-0 focus-visible:border-foreground aria-[invalid=true]:border-destructive';
+const fieldError = 'text-sm font-medium text-destructive';
+
+function SiteHeader({ companyName }: { companyName: string }) {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open]);
+
   return (
-    <div className={`group flex flex-col h-full ${muted ? 'opacity-70 hover:opacity-100 transition-opacity' : ''}`}>
-      <div className="mb-6">
-        <div className="flex items-center gap-3 mb-6">
-          <CornerDownRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-          <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            {project.category}
-          </span>
-        </div>
-        <h4 className="text-3xl font-medium tracking-tight group-hover:text-primary transition-colors">
-          {project.name}
-        </h4>
-        <p className="mt-3 font-mono text-xs text-foreground">{project.status}</p>
+    <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
+      <div className={`${wrap} h-[72px] flex items-center justify-between gap-6`}>
+        <a href="#main" className="flex items-center gap-4 min-w-0" data-testid="link-home">
+          <img src={LogoWhite} alt={companyName} className="h-9 md:h-10 w-auto" />
+        </a>
+        <nav aria-label="Primary" className="hidden md:block">
+          <ul className="flex items-center gap-1">
+            {NAV.map((n) => (
+              <li key={n.id}>
+                <a
+                  href={`#${n.id}`}
+                  data-testid={`link-nav-${n.id}`}
+                  className="inline-flex h-11 items-center px-4 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {n.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <button
+          type="button"
+          className="md:hidden inline-flex h-11 w-11 items-center justify-center border border-border"
+          aria-expanded={open}
+          aria-controls="mobile-nav"
+          aria-label={open ? 'Close menu' : 'Open menu'}
+          data-testid="button-menu"
+          onClick={() => setOpen((o) => !o)}
+        >
+          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
       </div>
-      <div className="mt-auto">
-        <p className="text-base text-muted-foreground leading-relaxed">
-          {project.description}
-        </p>
+      {open && (
+        <nav id="mobile-nav" aria-label="Mobile" className="md:hidden border-t border-border bg-background">
+          <ul className={`${wrap} py-2`}>
+            {NAV.map((n) => (
+              <li key={n.id} className="border-b border-border last:border-0">
+                <a
+                  href={`#${n.id}`}
+                  onClick={() => setOpen(false)}
+                  data-testid={`link-mobile-${n.id}`}
+                  className="flex h-14 items-center justify-between font-mono text-sm uppercase tracking-[0.14em]"
+                >
+                  {n.label} <ArrowRight aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
+    </header>
+  );
+}
+
+function SectionHead({
+  index,
+  id,
+  title,
+  children,
+}: {
+  index: string;
+  id: string;
+  title: string;
+  children?: ReactNode;
+}) {
+  return (
+    <div className="max-w-2xl">
+      <p className={`${label} mb-4`}>{index} /</p>
+      <h2 id={id} className="text-3xl md:text-4xl font-medium tracking-tight">
+        {title}
+      </h2>
+      {children && <p className="mt-4 text-base md:text-lg text-muted-foreground leading-relaxed">{children}</p>}
+    </div>
+  );
+}
+
+function Fact({ term, value }: { term: string; value: string }) {
+  return (
+    <div className="border-r border-b border-border p-5">
+      <dt className={label}>{term}</dt>
+      <dd className="mt-2 text-base">{value}</dd>
+    </div>
+  );
+}
+
+function ProjectCard({
+  project,
+  index,
+}: {
+  project: { name: string; slug: string; category: string; status: string; description: string };
+  index: number;
+}) {
+  return (
+    <article
+      data-testid={`card-project-${project.slug}`}
+      className="flex w-full flex-col border border-border bg-card p-6 md:p-10 hover:border-muted-foreground/60 transition-colors"
+    >
+      <div className="flex flex-col items-start gap-4 xl:flex-row xl:items-center xl:justify-between">
+        <span className={label}>{String(index).padStart(2, '0')} · {project.category}</span>
+        <span
+          data-testid={`status-project-${project.slug}`}
+          className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap border border-foreground/40 px-3 py-1.5 font-mono text-xs uppercase tracking-[0.1em]"
+        >
+          <span aria-hidden="true" className="h-1.5 w-1.5 bg-foreground" />
+          {project.status}
+        </span>
+      </div>
+      <h3 className="mt-10 md:mt-16 text-4xl md:text-5xl font-medium tracking-[-0.02em]">{project.name}</h3>
+      <p className="mt-6 text-base md:text-lg text-muted-foreground leading-relaxed">{project.description}</p>
+    </article>
+  );
+}
+
+function LoadingState() {
+  return (
+    <div className="min-h-[100dvh] bg-background" aria-busy="true" aria-live="polite">
+      <span className="sr-only">Loading</span>
+      <div className="border-b border-border h-[72px]" />
+      <div className={`${wrap} py-24 space-y-6 animate-pulse`}>
+        <div className="h-3 w-48 bg-muted" />
+        <div className="h-14 w-3/4 bg-muted" />
+        <div className="h-5 w-1/2 bg-muted" />
+        <div className="grid md:grid-cols-2 gap-8 pt-12">
+          <div className="h-64 bg-card border border-border" />
+          <div className="h-64 bg-card border border-border" />
+        </div>
       </div>
     </div>
   );

@@ -1,22 +1,22 @@
 {
   "companyName": "Generational Intelligence Limited",
-  "tagline": "Practical software for complex, real-world work.",
-  "description": "Generational Intelligence Limited is an Irish software development company. We develop practical software designed around how people work, decide and collaborate.",
+  "tagline": "Practical software for real-world operations",
+  "description": "Generational Intelligence Limited is an Irish software development company creating practical digital platforms for workplace services and delivery operations.",
   "projects": [
     {
       "name": "GatherWell",
       "slug": "gatherwell",
-      "description": "Workplace food and catering management software.",
-      "category": "Workplace software",
+      "description": "A workplace events marketplace and operations platform designed to help service providers and in-house teams source suppliers, prepare quotations, coordinate orders, and manage event costs and invoicing.",
+      "category": "Workplace services",
       "status": "In Development",
       "logoPath": "/published-assets/gatherwell-logo.png",
       "imagePath": null
     },
     {
-      "name": "Engara",
-      "slug": "engara",
-      "description": "Software platform in development.",
-      "category": "Software",
+      "name": "Angaro",
+      "slug": "angaro",
+      "description": "A delivery operations platform designed for small and growing fleets, bringing route planning, dispatch, driver workflows and live delivery visibility into one coordinated system.",
+      "category": "Delivery operations",
       "status": "In Development",
       "logoPath": null,
       "imagePath": null

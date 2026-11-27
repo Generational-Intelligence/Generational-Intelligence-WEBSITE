@@ -1,1 +1,1 @@
-- [Portfolio editorial policy](portfolio-editorial-policy.md) — Engara has no verified domain or feature brief; keep its description neutral until the owner approves specifics.
+- [Portfolio editorial policy](portfolio-editorial-policy.md) — Angaro is the approved brand spelling; describe both products as design purposes, not launched or proven capabilities.

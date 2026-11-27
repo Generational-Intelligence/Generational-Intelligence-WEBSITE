@@ -50,6 +50,10 @@ A public software portfolio backed by an explicitly approved snapshot, with a se
 
 ## Gotchas
 
+- Production publication is on hold: the owner instructed removal of the current physical registered-office address from all public content, including metadata and public snapshots. Do not relocate it to a hidden/legal page or invent a replacement.
+- The owner flagged Irish Companies Act 2014 section 151(4) as requiring registered-office disclosure on the company website. Do not describe the omission as compliant. Before republishing, the owner must arrange a legally valid replacement registered office or obtain advice, approve the resulting company-detail update, and explicitly authorize production publication.
+- Preserve internal records/history and CRO filings; the address-removal instruction applies to public content prepared for publication.
+
 - Never restore a production section to the Studio artifact.
 - Never add a production fallback from the approved snapshot to mutable project rows.
 - Publishing content in Studio prepares the next deployment snapshot; it does not update the live deployment by itself.
